@@ -12,6 +12,7 @@ import 'auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'navigation/nav_data.dart';
 import 'navigation/path_parser.dart';
+import 'services/helper/language_provider.dart';
 import 'ui/helpers/theme/mytheme.dart';
 
 Future<void> main() async {
@@ -48,12 +49,11 @@ class MyApp extends StatelessWidget {
           InvitationProvider invitationProvider = InvitationProvider();
           return invitationProvider;
         }),
-        /*ChangeNotifierProvider<FoodItemTilePreviewData>(
-            create: (_) => FoodItemTilePreviewData()),
-        StreamProvider<RemoteMessage?>(
-          create: (context) => FirebaseMessaging.onMessage,
-          initialData: null,
-        )*/
+        // Add LanguageProvider
+        ChangeNotifierProvider<LanguageProvider>(create: (_) {
+          LanguageProvider languageProvider = LanguageProvider();
+          return languageProvider;
+        }),
       ],
       child: FutureBuilder<User?>(
           future: FirebaseAuthHelper().auth.userChanges().first,

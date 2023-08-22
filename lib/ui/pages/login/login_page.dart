@@ -285,7 +285,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     if (widget.queryParams!["inv"] != null) {
       _invitationData = _invitationService
-          .fetchData(widget.queryParams!["inv"])
+          .fetchData(widget.queryParams!["inv"], context)
           .then((value) async {
         Provider.of<InvitationProvider>(context, listen: false)
             .setInvitation(value);

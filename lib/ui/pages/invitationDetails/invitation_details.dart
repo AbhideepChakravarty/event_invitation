@@ -40,7 +40,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<InvitationData>(
-      future: _invitationService.fetchData(widget.invitationCode),
+      future: _invitationService.fetchData(widget.invitationCode, context),
       builder: (BuildContext context, AsyncSnapshot<InvitationData> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched
@@ -124,218 +124,63 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
           // Add more content here
           const InviationVideoTile(),
           const SizedBox(height: 20),
+          ..._buildInvitationTiles(context),
         ],
       ),
     );
   }
 
-  Widget _buildAppBar(String imageUrl) {
-    double opacity = _scrollOffset / 100;
-
-    return SliverAppBar(
-      expandedHeight: MediaQuery.of(context).size.height * 0.5,
-      flexibleSpace: Stack(
-        children: [
-          Opacity(
-            opacity: 1 - opacity,
-            child: Image.network(
-              imageUrl,
-              width: double.infinity,
-              fit: BoxFit.cover,
+  List<Widget> _buildInvitationTiles(BuildContext context) {
+    List<Widget> tiles = [];
+    for (var tile in _invitationData.tiles) {
+      tiles.add(
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white // Rounded corners
+                ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          tile.image.toString()), // Use the image URI
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  width: MediaQuery.of(context).size.width,
+                  height: 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      tile.title,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                if (tile.footer != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      tile.footer!,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+              ],
             ),
           ),
-          Opacity(
-            opacity: opacity,
-            child: Container(
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSliverList(String primaryText) {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              primaryText,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'WeddingStyleFont',
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(height: 20),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          // Add more content here
-        ],
-      ),
-    );
-  }
-
-  Widget _buildScrollableContainer() {
-    return Container(
-      height: 300,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-      ),
-    );
-  }
-
-  // ... Other methods
-}
-
-
-
-
-/*class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
-  final ScrollController _scrollController = ScrollController();
-  double _scrollOffset = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(() {
-      setState(() {
-        _scrollOffset = _scrollController.offset;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    InvitationData? invitationData =
-        Provider.of<InvitationProvider>(context).invitationData;
-    if (invitationData == null) {
-      print("Found invitation data as null");
-      //Call InvitationService to fetch data by sending invitationCode
-
-      InvitationService().fetchData(widget.invitationCode).then((value) {
-        Provider.of<InvitationProvider>(context, listen: false)
-            .setInvitation(value);
-        invitationData = value;
-      });
+        ),
+      );
+      tiles.add(const SizedBox(height: 20));
     }
-    return Scaffold(
-      body: Stack(
-        children: [
-          _buildBackgroundImage(invitationData!.invitationDetailsImg),
-          _buildScrollableContent(invitationData!.primaryText),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-          _buildScrollableContainer(),
-        ],
-      ),
-    );
+    return tiles;
   }
-
-  Widget _buildScrollableContainer() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 300, // Adjust height as needed
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        ),
-      ),
-    );
-  }
-
-  /*Widget _buildBackgroundImage(String imageUrl) {
-    return Container(
-      constraints: BoxConstraints.expand(),
-      child: Transform.scale(
-        scale: 1.0 + _scrollOffset * 0.001, // Adjust scaling factor
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-  }*/
-
-  Widget _buildBackgroundImage(String imageUrl) {
-    double opacity = _scrollOffset /
-        100; // Adjust the divisor for desired opacity change rate
-
-    return Container(
-      constraints: BoxConstraints.expand(),
-      child: Transform.scale(
-        scale: 1.0 + _scrollOffset * 0.001,
-        child: Stack(
-          children: [
-            Opacity(
-              opacity: 1 - opacity,
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Opacity(
-              opacity: opacity,
-              child: Container(
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScrollableContent(String primaryText) {
-    return SingleChildScrollView(
-      controller: _scrollController,
-      child: Column(
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-          Center(
-            child: Text(
-              primaryText,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'WeddingStyleFont',
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          // Add more content here
-        ],
-      ),
-    );
-  }
-}*/
+}
