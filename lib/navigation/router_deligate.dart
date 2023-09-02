@@ -1,11 +1,14 @@
 import 'package:event_invitation/main.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/invitation_details.dart';
+import 'package:event_invitation/ui/pages/people/people_page.dart';
+import 'package:event_invitation/ui/pages/qna/qna_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
 import '../ui/helpers/security/secure_page.dart';
 import '../ui/pages/login/login_page.dart';
+import '../ui/pages/page/page_page.dart';
 import '../ui/unknown.dart';
 import 'nav_data.dart';
 
@@ -167,6 +170,30 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
         page = MaterialPage(
             key: ValueKey("InvitationDetails"),
             child: InvitationDetailsPage(invitationCode: id.toString()));
+      }
+
+      if (pathURL.startsWith("/pages")) {
+        print("Found pages page.");
+        page = MaterialPage(
+            key: ValueKey("Pages"), child: PagePage(pageRef: id.toString()));
+      }
+
+      if (pathURL.startsWith("/qnas")) {
+        print("Found QnA page.");
+        page = MaterialPage(
+            key: const ValueKey("QnA"),
+            child: QnAPage(
+              qnaRef: id.toString(),
+            ));
+      }
+
+      if (pathURL.startsWith("/people")) {
+        print("Found People page.");
+        page = MaterialPage(
+            key: const ValueKey("People"),
+            child: PeoplePage(
+              peopleRef: id.toString(),
+            ));
       }
     }
     return page;

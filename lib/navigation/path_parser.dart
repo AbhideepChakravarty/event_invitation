@@ -65,10 +65,14 @@ class EventAppRouteParser
     else if (uri.pathSegments.length == 2) {
       final second = uri.pathSegments.elementAt(1);
       final first = uri.pathSegments.elementAt(0);
-      if (second == "create" && first == "menuItems") {
-        navData = EventAppNavigatorData.menuItemCreate();
-      } else if (first == "invitations") {
+      if (first == "invitations") {
         navData = EventAppNavigatorData.invitationDetails(second);
+      } else if (first == "pages") {
+        navData = EventAppNavigatorData.page(second, {});
+      } else if (first == "people") {
+        navData = EventAppNavigatorData.people(second);
+      } else if (first == "qnas") {
+        navData = EventAppNavigatorData.qna(second);
       } else {
         navData = EventAppNavigatorData.unknown();
       }

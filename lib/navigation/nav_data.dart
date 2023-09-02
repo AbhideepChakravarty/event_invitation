@@ -8,7 +8,10 @@ class EventAppNavigatorData {
     "/404",
     "/",
     "/invitations",
-    "/manage",
+    "/pages",
+    "/qnas",
+    "/people",
+    //---------------
     "/counters/serve",
     "/counters/history",
     "/dashboards",
@@ -38,7 +41,7 @@ class EventAppNavigatorData {
     String url = "";
     String urlPart = "";
     for (String part in pathParts) {
-      //print("URL part = " + part);
+      print("URL part = " + part);
       if (part == "/") {
         url = part;
         continue;
@@ -56,10 +59,11 @@ class EventAppNavigatorData {
       }
       url = url.substring(0, url.length - 1);
     }
-    //print("ND URL part collected = " + url);
-    //print("ND Query Params = " + qp.toString());
+    print("ND URL part collected = " + urlPart);
+    print("ND URL collected = " + url);
+    print("ND Query Params = " + qp.toString());
     String finalPath = allowedPaths.contains(urlPart) ? url : "/404";
-    //print("Final path = $finalPath");
+    print("Final path = $finalPath");
     return finalPath;
   }
 
@@ -76,6 +80,22 @@ class EventAppNavigatorData {
       : id = null,
         this.targetPath = pTargetPath,
         pathParts = ["login"];
+  EventAppNavigatorData.invitationDetails(String invitationCode)
+      : id = invitationCode,
+        pathParts = ["invitations"];
+  EventAppNavigatorData.page(String pageRef, Map<String, dynamic> queryParams)
+      : id = pageRef,
+        qp = queryParams,
+        pathParts = ["pages"];
+  EventAppNavigatorData.qna(String qnaRef)
+      : id = qnaRef,
+        pathParts = ["qnas"];
+
+  EventAppNavigatorData.people(String peopleRef)
+      : id = peopleRef,
+        pathParts = ["people"];
+
+  //-------------------------------------------------------------------------------
   //pathURL = "/login";
   EventAppNavigatorData.menus()
       : id = null,
@@ -108,10 +128,6 @@ class EventAppNavigatorData {
       : id = null,
         pathParts = ["menuItems", "create"];
   //pathURL = "/menus/edit/" + menuCode;
-
-  EventAppNavigatorData.invitationDetails(String invitationCode)
-      : id = invitationCode,
-        pathParts = ["invitations"];
 
   EventAppNavigatorData.counterServe(String counterCode)
       : id = counterCode,

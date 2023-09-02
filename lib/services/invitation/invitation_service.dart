@@ -78,11 +78,19 @@ class InvitationService {
               ? textBlockDoc['footer'] // Use "footer" if present
               : null; // Check if "footer" is present
 
+          // Check if "type" key exists in tileSnapshot
+          String? type = tileSnapshot['type'];
+
+          // Check if "ref" key exists in tileSnapshot
+          String? ref = tileSnapshot['ref'];
+
           tileData = InvitationTileData(
             title: title,
             image: imageUri,
             footer: footer, // Assign "footer" value if present, otherwise null
             // Add more fields as needed
+            type: type ?? "",
+            ref: ref ?? "",
           );
         } else {
           print("TextBlock document not found.");

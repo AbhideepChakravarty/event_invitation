@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'video_player.dart';
+import '../../../helpers/media/video_player.dart';
 
 class InviationVideoTile extends StatelessWidget {
   const InviationVideoTile({super.key});

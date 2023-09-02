@@ -1,4 +1,5 @@
 import 'package:event_invitation/services/invitation/invitation_notifier.dart';
+import 'package:event_invitation/ui/pages/invitationDetails/components/invitation_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
             child: Center(
               child: Text(
                 _invitationData.primaryText,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
@@ -133,52 +134,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   List<Widget> _buildInvitationTiles(BuildContext context) {
     List<Widget> tiles = [];
     for (var tile in _invitationData.tiles) {
-      tiles.add(
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white // Rounded corners
-                ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          tile.image.toString()), // Use the image URI
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      tile.title,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                if (tile.footer != null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      tile.footer!,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-      );
+      tiles.add(InvitationTile(tile: tile));
       tiles.add(const SizedBox(height: 20));
     }
     return tiles;
