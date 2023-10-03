@@ -11,6 +11,7 @@ class EventAppNavigatorData {
     "/pages",
     "/qnas",
     "/people",
+    "/userProfile",
     //---------------
     "/counters/serve",
     "/counters/history",
@@ -75,6 +76,12 @@ class EventAppNavigatorData {
       : id = null,
         qp = queryParams,
         pathParts = ["login"];
+  EventAppNavigatorData.userProfile(
+      Map<String, dynamic> queryParams, EventAppNavigatorData? targetPath)
+      : id = null,
+        this.targetPath = targetPath,
+        qp = queryParams,
+        pathParts = ["userProfile"];
   EventAppNavigatorData.loginWithTarget(
       EventAppNavigatorData pTargetPath, Map<String, dynamic> queryParams)
       : id = null,

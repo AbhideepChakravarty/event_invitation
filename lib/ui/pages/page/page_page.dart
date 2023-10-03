@@ -1,15 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_invitation/services/page/page_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/helper/language_provider.dart';
 import '../../../services/page/page_data.dart';
 import '../../helpers/media/audio_player.dart';
+import '../../helpers/theme/font_provider.dart';
 
 class PagePage extends StatelessWidget {
   final String pageRef;
   final PageService _pageService = PageService();
+
   PagePage({Key? key, required this.pageRef}) : super(key: key);
 
   Future<PageData> _fetchPageData(String languageCode) async {
@@ -29,18 +32,21 @@ class PagePage extends StatelessWidget {
       builder: (context, snapshot) {
         print("Snapshot: " + snapshot.toString());
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(child: Text('Error loading data'));
+          return const Center(child: Text('Error loading data'));
         } else if (!snapshot.hasData) {
-          return Center(child: Text('No data available'));
+          return const Center(child: Text('No data available'));
         }
 
         final pageData = snapshot.data!;
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(pageData.title),
+            title: Text(
+              pageData.title,
+              style: Provider.of<FontProvider>(context).secondaryTextFont,
+            ),
             automaticallyImplyLeading: false, // Disable the back button
           ),
           body: Stack(children: [
@@ -55,14 +61,15 @@ class PagePage extends StatelessWidget {
   List<Widget> _buildContentList(
       List<PageContent> contentList, BuildContext context) {
     List<Widget> widgets = [];
+    final fontProvider = Provider.of<FontProvider>(context);
 
     for (var content in contentList) {
       if (content is TextContent) {
         widgets.add(
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Text(content.text),
-          ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child:
+                  Text(content.text, style: fontProvider.descriptionTextFont)),
         );
       } else if (content is ImageContent) {
         widgets.add(
@@ -78,13 +85,13 @@ class PagePage extends StatelessWidget {
             child: CarouselSlider(
               options: CarouselOptions(
                 autoPlay: true,
-                autoPlayInterval: Duration(seconds: 3),
+                autoPlayInterval: const Duration(seconds: 3),
                 pauseAutoPlayOnTouch: true,
               ),
               items: content.imageList.map((image) {
                 return Container(
                   width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   child: Image.network(image.toString(), fit: BoxFit.cover),
                 );
               }).toList(),
@@ -99,7 +106,7 @@ class PagePage extends StatelessWidget {
           ),
         );
       }
-      widgets.add(Container(height: 20, color: Colors.white));
+      widgets.add(Container(height: 30, color: Colors.white));
     }
 
     return widgets;

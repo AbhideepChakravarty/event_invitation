@@ -1,5 +1,23 @@
 {
   "projects": {
-    "default": "weddingproject-175d4"
+    "default": "weddingproject-175d4",
+    "prod": "occur-prod"
+  },
+  "targets": {
+    "weddingproject-175d4": {
+      "hosting": {
+        "dev": [
+          "weddingproject-175d4"
+        ]
+      }
+    },
+    "occur-prod": {
+      "hosting": {
+        "prod": [
+          "occur-prod"
+        ]
+      }
+    }    
   }
+
 }

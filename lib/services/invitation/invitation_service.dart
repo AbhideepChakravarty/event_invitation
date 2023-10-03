@@ -1,3 +1,4 @@
+import 'package:event_invitation/services/invitation/invitation_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,18 +17,31 @@ class InvitationService {
       String invitationCode, BuildContext context) async {
     print("Fetching invitation with code as " + invitationCode);
 
-    final invitationQuery = await invitationsCollection
-        .where('invitationCode', isEqualTo: invitationCode)
-        .get();
+    final invitationDoc = await invitationsCollection.doc(invitationCode).get();
 
-    if (invitationQuery.size == 0) {
+    if (!invitationDoc.exists) {
       throw Exception("Invitation not found");
     }
 
-    final documentSnapshot = invitationQuery.docs.first;
+    //final documentSnapshot = invitationDoc.data() as Map<String, dynamic>;
 
+    InvitationData invitationData = InvitationData(
+      primaryText: invitationDoc['primaryText'],
+      secondaryText: invitationDoc['secondaryText'],
+      invitationCode: invitationDoc['invitationCode'],
+      invitationImage: invitationDoc['invitationImage'],
+      invitationDetailsImg: invitationDoc['invitationDetailsImg'],
+      dbId: invitationDoc.id,
+    );
+    Provider.of<InvitationProvider>(context, listen: false)
+        .setInvitation(invitationData);
+    return invitationData;
+  }
+
+  Future<List<InvitationTileData>> getInvitationTileData(
+      String invitationId, String lang) async {
     final tilesQuerySnapshot = await invitationsCollection
-        .doc(documentSnapshot.id)
+        .doc(invitationId)
         .collection('tiles')
         .orderBy("seq")
         .get();
@@ -36,29 +50,16 @@ class InvitationService {
 
     for (QueryDocumentSnapshot tileSnapshot in tilesQuerySnapshot.docs) {
       final textBlock = tileSnapshot['textBlock'];
-      final tileData = await _getTileText(textBlock, tileSnapshot, context);
+      final tileData = await _getTileText(textBlock, tileSnapshot, lang);
       if (tileData != null) {
         tiles.add(tileData);
       }
     }
-
-    InvitationData invitationData = InvitationData(
-      primaryText: documentSnapshot['primaryText'],
-      secondaryText: documentSnapshot['secondaryText'],
-      invitationCode: documentSnapshot['invitationCode'],
-      invitationImage: documentSnapshot['invitationImage'],
-      invitationDetailsImg: documentSnapshot['invitationDetailsImg'],
-      tiles: tiles,
-    );
-
-    return invitationData;
+    return tiles;
   }
 
-  Future<InvitationTileData?> _getTileText(String textBlock,
-      QueryDocumentSnapshot tileSnapshot, BuildContext context) async {
-    final lang = Provider.of<LanguageProvider>(context, listen: false)
-        .locale
-        .languageCode;
+  Future<InvitationTileData?> _getTileText(
+      String textBlock, QueryDocumentSnapshot tileSnapshot, String lang) async {
     InvitationTileData? tileData;
     try {
       print("Working with " + textBlock + "-" + lang);

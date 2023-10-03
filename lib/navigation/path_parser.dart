@@ -39,9 +39,9 @@ class EventAppRouteParser
           //print("Signup triggered.");
           navData = EventAppNavigatorData.signup();
           break;
-        case "menus":
+        case "userProfile":
           //print("Menus triggered.");
-          navData = EventAppNavigatorData.menus();
+          navData = EventAppNavigatorData.userProfile(queryParams, null);
           break;
         case "dashboards":
           //print("Menus triggered.");

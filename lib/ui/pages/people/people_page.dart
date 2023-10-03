@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../services/people/people_data.dart';
 import '../../../services/people/people_service.dart';
+import '../../helpers/theme/font_provider.dart';
 
 class PeoplePage extends StatelessWidget {
   final String peopleRef;
@@ -29,16 +30,24 @@ class PeoplePage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(peopleData.title),
+            title: Text(peopleData.title,
+                style: Provider.of<FontProvider>(context)
+                    .secondaryTextFont
+                    .copyWith(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold)),
             automaticallyImplyLeading: false,
           ),
           body: SingleChildScrollView(
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(peopleData.description),
-                ),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(peopleData.description,
+                        style: Provider.of<FontProvider>(context)
+                            .descriptionTextFont
+                            .copyWith(fontSize: 16, color: Colors.black))),
                 ...peopleData.entries
                     .map((entry) => PeopleEntryWidget(entry: entry)),
               ],

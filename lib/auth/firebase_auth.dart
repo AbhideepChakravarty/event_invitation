@@ -118,4 +118,8 @@ class FirebaseAuthHelper with ChangeNotifier {
       onVerificationFailed(error);
     });
   }
+
+  Future<void> logout() async {
+    await auth.signOut();
+  }
 }

@@ -1,202 +1,44 @@
 import 'package:event_invitation/auth/firebase_auth.dart';
 import 'package:event_invitation/navigation/nav_data.dart';
+import 'package:event_invitation/services/userProfile/user_profile_service.dart';
+import 'package:event_invitation/ui/helpers/theme/font_provider.dart';
+import 'package:event_invitation/ui/pages/login/components/isd_dropdown.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:flutter_signin_button/button_builder.dart';
 import 'package:provider/provider.dart';
 
 import '../../../navigation/router_deligate.dart';
+import '../../../services/helper/user_profile_provider.dart';
 import '../../../services/invitation/invitation_data.dart';
 import '../../../services/invitation/invitation_notifier.dart';
 import '../../../services/invitation/invitation_service.dart';
+import '../../../services/userProfile/user_profile_data.dart';
 
-// ignore: must_be_immutable
-class LoginPage2 extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   final ValueChanged<EventAppNavigatorData> onTap;
-  final EventAppNavigatorData? targetPage;
-  final _formKey = GlobalKey<FormState>();
-  final _myLoginController = TextEditingController();
-  final _myPwdController = TextEditingController();
-  late BuildContext localContext;
+  final Map<String, dynamic>? queryParams;
+  final EventAppNavigatorData? targetPath;
 
-  LoginPage2({Key? key, required this.onTap, this.targetPage})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    //AuthVerifier.verifyLogin(context, onTap, null);
-    print("Login page loading starts");
-    /*FirebaseAuth.instance.userChanges().listen((event) {
-      print("User check on login page.");
-      if (event != null) print("User found on login page.");
-      //print("I am happening");
-      this.targetPage == null
-          ? onTap(FastServeAdminNavigatorData.menus())
-          : onTap(targetPage!);
-    });*/
-    //print("User not found on login page.");
-    return Container();
-
-    /*SignInScreen(
-      showAuthActionSwitch: false,
-      providers: [
-        EmailAuthProvider(),
-      ],
-      actions: [
-        AuthStateChangeAction<SignedIn>((context, state) async {
-          await Singleton().loadConfig();
-          FirebaseAuthenticationService().subscribeToTopics();
-          this.targetPage == null
-              ? onTap(FastServeAdminNavigatorData.menus())
-              : onTap(targetPage!);
-        }),
-      ],
-      headerBuilder: (context, constraints, shrinkOffset) {
-        return Container(
-          height: 200,
-          margin: EdgeInsets.only(top: 10),
-          child: Image(image: AssetImage("images/undraw_sign_in.png")),
-        );
-      },
-      //headerBuilder: headerImage('assets/images/flutterfire_logo.png'),
-    );*/
-    /*this.localContext = context;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(color: Colors.white),
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: SingleChildScrollView(
-            child: Form(
-                key: this._formKey, child: Column(children: getLoginForm()))),
-      ),
-    );*/
-  }
-
-  List<Widget> getLoginForm() {
-    List<Widget> column = [];
-    var email = Container(
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(10),
-        child: TextFormField(
-          controller: this._myLoginController,
-          textAlign: TextAlign.center,
-          autocorrect: false,
-          decoration: InputDecoration(
-              prefixIcon: Icon(Icons.email),
-              labelText: 'Email',
-              hintText: 'abc@xyz.com'),
-          validator: (value) {},
-        ));
-    var pwd = Container(
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(10),
-        child: TextFormField(
-          controller: this._myPwdController,
-          textAlign: TextAlign.center,
-          obscureText: true,
-          autocorrect: false,
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.lock),
-            labelText: 'Password',
-          ),
-          validator: (value) {
-            if (value!.trim().isEmpty) {
-              return 'Please enter password.';
-            }
-            return null;
-          },
-        ));
-    Widget image = Container(
-      height: 200,
-      margin: EdgeInsets.only(top: 10),
-      child: Image(image: AssetImage("images/undraw_sign_in.png")),
-    );
-    Widget button = ElevatedButton(
-      onPressed: () async {
-        //print("Trying to sign in.");
-        if (_formKey.currentState!.validate()) {
-          /*var firebaseAuth = FirebaseAuthenticationService();
-          String msg = await firebaseAuth.signInWithEmail(
-              this._myLoginController.text, this._myPwdController.text);
-          if (msg.contains("Sign in successful!")) {
-            this.targetPage == null
-                ? onTap(FastServeAdminNavigatorData.menus())
-                : onTap(targetPage!);*/
-        } else {
-          final snackBar = SnackBar(content: Text("msg"));
-          ScaffoldMessenger.of(this.localContext).showSnackBar(snackBar);
-        }
-      },
-      child: Text("Login"),
-    );
-    column.add(image);
-    column.add(email);
-    column.add(pwd);
-    column.add(button);
-    return column;
-  }
-}
-
-class MyVertRectClipper extends CustomClipper<Rect> {
-  Rect getClip(Size size) {
-    return Rect.fromLTRB(0, 0, 100, 100);
-  }
-
-  bool shouldReclip(oldClipper) {
-    return false;
-  }
-}
-
-/////////////////////////////////////////////////////////////////////////
-///
-///
-
-class LoginPage extends StatefulWidget {
-  final ValueChanged<EventAppNavigatorData> onTap;
-  Map<String, dynamic>? queryParams = {};
-  EventAppNavigatorData? targetPath;
   LoginPage({Key? key, required this.onTap, this.queryParams, this.targetPath})
       : super(key: key);
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
 
-class _LoginPageState extends State<LoginPage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _codeController = TextEditingController();
   final FirebaseAuthHelper _authHelper = FirebaseAuthHelper();
   String dropdownValue = '+91';
   String? _verificationId;
   final InvitationService _invitationService = InvitationService();
+  final UserProfileService _userProfileService = UserProfileService();
+
   late Future<InvitationData> _invitationData;
 
-  void _onVerificationCompleted() {
-    print("Go to home page");
-    // Navigate to the home page
-    final delegator =
-        Provider.of<EventAppRouterDelegate>(context, listen: false);
-    print("Delegator: $delegator");
-    ValueChanged<EventAppNavigatorData> onTap = delegator.routeTrigger;
-    if (widget.targetPath != null) {
-      onTap(widget.targetPath!);
-      return;
-    } else {
-      var invitationCode = widget.queryParams!["inv"];
-      print("Invitation code: $invitationCode");
-      invitationCode == null
-          ? onTap(EventAppNavigatorData.home({}))
-          : onTap(EventAppNavigatorData.invitationDetails(invitationCode));
-    }
+  void _onVerificationCompleted(BuildContext context) {
+    _loadUser(context);
   }
 
-  void _onVerificationFailed(FirebaseAuthException e) {
+  void _onVerificationFailed(BuildContext context, FirebaseAuthException e) {
     // Show a dialog with the error message
     showDialog(
       context: context,
@@ -204,7 +46,8 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           title: Text('Verification Failed'),
           content: Text(
-              e.message ?? 'An unknown error occurred.' + e.message! + e.code),
+            e.message ?? 'An unknown error occurred.' + e.message! + e.code,
+          ),
           actions: <Widget>[
             ElevatedButton(
               child: Text('OK'),
@@ -218,7 +61,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onCodeSent(String verificationId, int? resendToken) {
+  void _onCodeSent(
+      String verificationId, int? resendToken, BuildContext context) {
     _verificationId = verificationId;
     // Show dialog to enter the SMS code
     print("Code received.");
@@ -242,11 +86,11 @@ class _LoginPageState extends State<LoginPage> {
                     .signInWithCredntials(
                         _codeController.text, _verificationId!)
                     .then((value) {
-                  _onVerificationCompleted();
+                  _onVerificationCompleted(context);
                 }).onError((error, stackTrace) {
                   FirebaseAuthException ex = FirebaseAuthException(
                       message: error.toString(), code: 'ERROR');
-                  _onVerificationFailed(ex);
+                  _onVerificationFailed(context, ex);
                 });
               },
             ),
@@ -256,7 +100,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onCodeAutoRetrievalTimeout(String verificationId) {
+  void _onCodeAutoRetrievalTimeout(
+      String verificationId, BuildContext context) {
     _verificationId = verificationId;
     // Show a dialog with a timeout message
     showDialog(
@@ -280,48 +125,41 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (widget.queryParams!["inv"] != null) {
+  Widget build(BuildContext context) {
+    if (queryParams!["inv"] != null) {
       _invitationData = _invitationService
-          .fetchData(widget.queryParams!["inv"], context)
+          .fetchData(queryParams!["inv"], context)
           .then((value) async {
         Provider.of<InvitationProvider>(context, listen: false)
             .setInvitation(value);
         return value;
       });
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    print("LP Query Paramas: " + widget.queryParams.toString());
+    print("LP Query Paramas: " + queryParams.toString());
     return Scaffold(
-      body: widget.queryParams!["inv"] != null
+      body: queryParams!["inv"] != null
           ? _getInvitationLoginPage()
-          : _getSimpleLoginPage(),
+          : _getSimpleLoginPage(context),
     );
   }
 
-  Container _getSimpleLoginPage() {
+  Container _getSimpleLoginPage(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: //Set a gradient of purple color
-              [
+          colors: [
             Colors.purple.shade700,
-            const Color.fromARGB(255, 234, 199, 240)
+            const Color.fromARGB(255, 234, 199, 240),
           ],
         ),
       ),
-      child: _getPhoneLoginWidgets(),
+      child: _getPhoneLoginWidgets(context),
     );
   }
 
-  Align _getPhoneLoginWidgets() {
+  Align _getPhoneLoginWidgets(BuildContext context) {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -346,28 +184,13 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               Row(
                 children: <Widget>[
-                  DropdownButton<String>(
-                    value: dropdownValue,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.purple[700]),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.purple[700],
-                    ),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        dropdownValue = newValue!.toString();
-                      });
+                  ISDDropdownWidget(
+                    initialValue: dropdownValue,
+                    onChanged: (newValue) {
+                      // Handle the value change here
+                      dropdownValue = newValue;
+                      // You can update your state or perform other actions based on the new value
                     },
-                    items: <String>['+1', '+91', '+44', '+61']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
                   ),
                   const SizedBox(width: 10),
                   Expanded(
@@ -398,15 +221,17 @@ class _LoginPageState extends State<LoginPage> {
                     await _authHelper
                         .signInWithPhoneNumber(phoneNumber)
                         .then((confirmationResult) {
-                      _openOTPDialog(confirmationResult);
+                      _openOTPDialog(confirmationResult, context);
                     });
                   } else {
                     _authHelper.verifyPhoneNumber(
                       phoneNumber,
-                      _onVerificationCompleted,
-                      _onVerificationFailed,
-                      _onCodeSent,
-                      _onCodeAutoRetrievalTimeout,
+                      () => _onVerificationCompleted(context),
+                      (e) => _onVerificationFailed(context, e),
+                      (verificationId, resendToken) =>
+                          _onCodeSent(verificationId, resendToken, context),
+                      (verificationId) =>
+                          _onCodeAutoRetrievalTimeout(verificationId, context),
                     );
                   }
                 },
@@ -435,7 +260,6 @@ class _LoginPageState extends State<LoginPage> {
         }
 
         final invitation = snapshot.data!;
-
         return Scaffold(
           body: Stack(
             children: [
@@ -467,29 +291,30 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Text(
                         invitation.primaryText,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          fontFamily:
-                              'WeddingStyleFont', // Use the desired wedding style font
-                        ),
+                        style: Provider.of<FontProvider>(context)
+                            .primaryTextFont
+                            .copyWith(
+                              fontSize: 50,
+                              color: Colors.white,
+                            ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 20),
+                      //const SizedBox(height: 20),
                       SizedBox(
-                        height: 105,
+                        //height: 105,
                         child: Text(
                           invitation.secondaryText,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
+                          style: Provider.of<FontProvider>(context)
+                              .secondaryTextFont
+                              .copyWith(
+                                fontSize: 30,
+                                color: Colors.white,
+                              ),
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      _getPhoneLoginWidgets(),
+
+                      Expanded(child: _getPhoneLoginWidgets(context)),
                     ],
                   ),
                 ),
@@ -501,8 +326,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _openOTPDialog(ConfirmationResult confirmationResult) {
-    // open a dialog to enter the OTP with 1 min countdown for resend OTP option
+  void _openOTPDialog(
+      ConfirmationResult confirmationResult, BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -537,7 +362,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      // Implement resend OTP functionality here
                       await _authHelper.signInWithPhoneNumber(
                         dropdownValue + _phoneController.text.trim(),
                       );
@@ -557,12 +381,11 @@ class _LoginPageState extends State<LoginPage> {
           actions: [
             ElevatedButton(
               onPressed: () async {
-                // Implement verify OTP functionality here
                 await _authHelper.verifyOTP(
                   confirmationResult,
                   _codeController.text.trim(),
-                  _onVerificationCompleted,
-                  _onVerificationFailed,
+                  () => _onVerificationCompleted(context),
+                  (e) => _onVerificationFailed(context, e),
                 );
               },
               child: const Text('Verify'),
@@ -571,5 +394,105 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
+  }
+
+  void _loadUser(BuildContext context) {
+    _userProfileService.getUserProfile().then((value) {
+      if (value != null) {
+        Provider.of<UserProfileProvider>(context, listen: false)
+            .setUserProfile(value);
+        _gotoNextPage(context);
+      } else {
+        _createUser(context);
+      }
+    });
+  }
+
+  void _createUser(BuildContext context) {
+    String phoneNumber = FirebaseAuthHelper().getUser!.phoneNumber!;
+    showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController firstNameController =
+            TextEditingController();
+        final TextEditingController lastNameController =
+            TextEditingController();
+
+        return AlertDialog(
+          title: Text('Enter Your First Name and Last Name'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: firstNameController,
+                decoration: InputDecoration(
+                  hintText: 'First Name',
+                ),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                controller: lastNameController,
+                decoration: InputDecoration(
+                  hintText: 'Last Name',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                final firstName = firstNameController.text;
+                final lastName = lastNameController.text;
+                var userProfileData = UserProfileData(
+                  firstName: firstName,
+                  lastName: lastName,
+                  phoneNumber: phoneNumber,
+                );
+                _userProfileService.createUser(userProfileData);
+                Provider.of<UserProfileProvider>(context, listen: false)
+                    .setUserProfile(userProfileData);
+                firstNameController.dispose();
+                lastNameController.dispose();
+                Navigator.of(context).pop();
+                _gotoNextPage(context);
+              },
+              child: const Text('Save'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red,
+              ),
+              onPressed: () async {
+                await FirebaseAuthHelper().logout();
+                await FirebaseAuthHelper().signInAnonymously;
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _gotoNextPage(BuildContext context) {
+    print("Go to home page");
+    // Navigate to the home page
+    final delegator =
+        Provider.of<EventAppRouterDelegate>(context, listen: false);
+    print("Delegator: $delegator");
+    ValueChanged<EventAppNavigatorData> onTap = delegator.routeTrigger;
+    if (targetPath != null) {
+      onTap(targetPath!);
+      return;
+    } else {
+      var invitationCode = queryParams!["inv"];
+      print("Invitation code: $invitationCode");
+      invitationCode == null
+          ? onTap(EventAppNavigatorData.home({}))
+          : onTap(EventAppNavigatorData.invitationDetails(invitationCode));
+    }
   }
 }

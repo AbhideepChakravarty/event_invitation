@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../navigation/nav_data.dart';
 import '../../../../navigation/router_deligate.dart';
 import '../../../../services/invitation/invitation_tile.dart';
+import '../../../helpers/theme/font_provider.dart';
 
 class InvitationTile extends StatelessWidget {
   final InvitationTileData tile;
@@ -42,22 +43,19 @@ class InvitationTile extends StatelessWidget {
                 height: 200,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    tile.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text(tile.title,
+                      style: Provider.of<FontProvider>(context)
+                          .secondaryTextFont
+                          .copyWith(fontSize: 24, color: Colors.black)),
                 ),
               ),
               if (tile.footer != null)
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    tile.footer!,
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  child: Text(tile.footer!,
+                      style: Provider.of<FontProvider>(context)
+                          .descriptionTextFont
+                          .copyWith(fontSize: 16, color: Colors.black)),
                 ),
             ],
           ),
@@ -78,8 +76,8 @@ class InvitationTile extends StatelessWidget {
       case "image":
         data = EventAppNavigatorData.page(tile.ref, {});
         break;
-      case "imageCarousel":
-        data = EventAppNavigatorData.page(tile.ref, {});
+      case "people":
+        data = EventAppNavigatorData.people(tile.ref);
         break;
       case "qna":
         data = EventAppNavigatorData.qna(tile.ref);

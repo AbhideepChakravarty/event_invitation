@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:event_invitation/navigation/router_deligate.dart';
 import 'package:event_invitation/services/invitation/invitation_notifier.dart';
+import 'package:event_invitation/services/userProfile/user_profile_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,13 @@ import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import 'auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import 'firebase_opti.dart';
 import 'navigation/nav_data.dart';
 import 'navigation/path_parser.dart';
 import 'services/helper/language_provider.dart';
+import 'services/helper/user_profile_provider.dart';
 import 'ui/helpers/theme/mytheme.dart';
+import 'ui/helpers/theme/font_provider.dart';
 
 Future<void> main() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -53,6 +56,16 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<LanguageProvider>(create: (_) {
           LanguageProvider languageProvider = LanguageProvider();
           return languageProvider;
+        }),
+        // Add UserProfileProvider
+        ChangeNotifierProvider<UserProfileProvider>(create: (_) {
+          var userProfileProvider = UserProfileProvider();
+          userProfileProvider.setUserProfile(null);
+          return userProfileProvider;
+        }),
+        // Add TextThemeProvider
+        ChangeNotifierProvider<FontProvider>(create: (_) {
+          return FontProvider();
         }),
       ],
       child: FutureBuilder<User?>(

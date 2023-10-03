@@ -1,12 +1,13 @@
 import 'invitation_tile.dart';
 
 class InvitationData {
+  late String? dbId;
   final String primaryText;
   final String secondaryText;
   final String invitationCode;
   final String invitationImage;
   final String invitationDetailsImg;
-  final List<InvitationTileData> tiles;
+  late List<InvitationTileData>? tiles;
 
   InvitationData(
       {required this.primaryText,
@@ -14,5 +15,6 @@ class InvitationData {
       required this.invitationCode,
       required this.invitationImage,
       required this.invitationDetailsImg,
-      required this.tiles});
+      this.tiles,
+      this.dbId});
 }

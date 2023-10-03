@@ -1,10 +1,13 @@
+import 'package:event_invitation/services/helper/language_provider.dart';
 import 'package:event_invitation/services/invitation/invitation_notifier.dart';
+import 'package:event_invitation/ui/helpers/theme/font_provider.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/components/invitation_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/invitation/invitation_data.dart';
 import '../../../services/invitation/invitation_service.dart';
+import '../../../services/invitation/invitation_tile.dart';
 import 'components/inviation_video_tile.dart';
 
 class InvitationDetailsPage extends StatefulWidget {
@@ -113,30 +116,66 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Center(
-              child: Text(
-                _invitationData.primaryText,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              child: Text(_invitationData.primaryText,
+                  style: Provider.of<FontProvider>(context)
+                      .primaryTextFont
+                      .copyWith(
+                        fontSize: 60,
+                        color: Colors.purple[900],
+                      )),
             ),
           ),
           // Add more content here
           const InviationVideoTile(),
           const SizedBox(height: 20),
-          ..._buildInvitationTiles(context),
+          _buildInvitationTiles(context),
         ],
       ),
     );
   }
 
-  List<Widget> _buildInvitationTiles(BuildContext context) {
+  Widget _buildInvitationTiles(BuildContext context) {
+    return FutureBuilder<List<InvitationTileData>>(
+      future: _getInvitationTiles(context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator.adaptive();
+        } else if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Text('No invitation tiles available.');
+        } else {
+          List<Widget> tileList = [];
+          for (var tile in snapshot.data!) {
+            tileList.add(InvitationTile(tile: tile));
+            tileList.add(const SizedBox(height: 20));
+          }
+
+          print("Size of tiles = " + tileList.length.toString());
+          return Column(children: tileList);
+        }
+      },
+    );
+  }
+
+  Future<List<InvitationTileData>> _getInvitationTiles(
+      BuildContext context) async {
+    String lang = Provider.of<LanguageProvider>(context).locale.languageCode;
+    List<InvitationTileData> invitationTiles = (await _invitationService
+        .getInvitationTileData(_invitationData.dbId!, lang));
+    return invitationTiles;
+  }
+
+  /*List<Widget> _buildInvitationTiles(BuildContext context) {
     List<Widget> tiles = [];
+    String lang = Provider.of<LanguageProvider>(context).locale.languageCode;
+    List<InvitationTileData> invitationTiles =
+         _invitationService.getInvitationTileData(
+            _invitationData.dbId!, lang);
     for (var tile in _invitationData.tiles) {
       tiles.add(InvitationTile(tile: tile));
       tiles.add(const SizedBox(height: 20));
     }
     return tiles;
-  }
+  }*/
 }

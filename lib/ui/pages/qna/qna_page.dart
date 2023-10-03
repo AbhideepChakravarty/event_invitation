@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../services/qna/qna_data.dart';
 import '../../../services/qna/qna_service.dart';
+import '../../helpers/theme/font_provider.dart';
 
 class QnAPage extends StatelessWidget {
   final String qnaRef;
@@ -24,7 +26,13 @@ class QnAPage extends StatelessWidget {
           final qnaData = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
-              title: Text(qnaData.title),
+              title: Text(qnaData.title,
+                  style: Provider.of<FontProvider>(context)
+                      .secondaryTextFont
+                      .copyWith(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold)),
               automaticallyImplyLeading: false,
             ),
             body: ListView.builder(
@@ -33,19 +41,24 @@ class QnAPage extends StatelessWidget {
                 final item = qnaData.items[index];
                 return Card(
                   elevation: 4,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
-                    title: Text(
-                      item.question,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    title: Text(item.question,
+                        style: Provider.of<FontProvider>(context)
+                            .descriptionTextFont
+                            .copyWith(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold)),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 8), // Add gap
-                        Text(item.answer),
+                        Text(item.answer,
+                            style: Provider.of<FontProvider>(context)
+                                .descriptionTextFont
+                                .copyWith(fontSize: 16, color: Colors.black))
                       ],
                     ),
                   ),

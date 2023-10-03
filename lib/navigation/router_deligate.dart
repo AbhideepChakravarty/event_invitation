@@ -1,4 +1,5 @@
 import 'package:event_invitation/main.dart';
+import 'package:event_invitation/services/userProfile/user_profile_data.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/invitation_details.dart';
 import 'package:event_invitation/ui/pages/people/people_page.dart';
 import 'package:event_invitation/ui/pages/qna/qna_page.dart';
@@ -9,6 +10,8 @@ import 'package:collection/collection.dart';
 import '../ui/helpers/security/secure_page.dart';
 import '../ui/pages/login/login_page.dart';
 import '../ui/pages/page/page_page.dart';
+import '../ui/pages/userInvitation/home_page.dart';
+import '../ui/pages/userProfile/user_profile_page.dart';
 import '../ui/unknown.dart';
 import 'nav_data.dart';
 
@@ -157,11 +160,12 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
       }
       if (pathURL == "/") {
         print("Found Homepage.");
-        page = const MaterialPage(
-            key: ValueKey("HomePage"),
-            child: MyHomePage(
-              title: 'Home page',
-            ));
+        page = const MaterialPage(key: ValueKey("HomePage"), child: HomePage());
+      }
+      if (pathURL == "/userProfile") {
+        print("Found User Profile.");
+        page = MaterialPage(
+            key: const ValueKey("UserProfile"), child: UserProfilePage());
       }
     } else {
       //Here id is not null

@@ -46,6 +46,10 @@ dependencies:
   chewie: ^1.7.0
   audioplayers: ^4.1.0
   carousel_slider: ^4.2.1
+  http: ^0.13.6
+  google_fonts: ^4.0.4
+  flutter_markdown: ^0.6.15
+  url_launcher: ^6.1.11
   
 dev_dependencies:
   flutter_test:
