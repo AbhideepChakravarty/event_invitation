@@ -5,7 +5,10 @@ import '../../../helpers/media/video_player.dart';
 import '../../../helpers/theme/font_provider.dart';
 
 class InviationVideoTile extends StatelessWidget {
-  const InviationVideoTile({super.key});
+  final String videoUrl;
+  final String thumbnailURL;
+  const InviationVideoTile(
+      {super.key, required this.thumbnailURL, required this.videoUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class InviationVideoTile extends StatelessWidget {
                 child: Text('Invitation',
                     style: Provider.of<FontProvider>(context)
                         .secondaryTextFont
-                        .copyWith(fontSize: 24, color: Colors.black))),
+                        .copyWith(fontSize: 24, color: Color(0xFF980147)))),
             const SizedBox(height: 16),
             // Add video player widget here
             const ChewieVideoPlayer(

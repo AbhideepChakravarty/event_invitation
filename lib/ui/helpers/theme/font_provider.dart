@@ -18,13 +18,12 @@ class FontProvider extends ChangeNotifier {
         primaryFontFamily ?? 'Lovers Quarrel',
       );
 
-  TextStyle get secondaryTextFont => GoogleFonts.getFont(
-        secondaryFontFamily ?? 'Inknut Antiqua',
-      );
+  TextStyle get secondaryTextFont =>
+      GoogleFonts.getFont(secondaryFontFamily ?? 'Inknut Antiqua', height: 1.5);
 
-  TextStyle get descriptionTextFont => GoogleFonts.getFont(
-        descriptionFontFamily ?? 'Playfair Display',
-      );
+  TextStyle get descriptionTextFont =>
+      GoogleFonts.getFont(descriptionFontFamily ?? 'Playfair Display',
+          height: 1.5);
 
   MarkdownStyleSheet get getMarkdownSheet => MarkdownStyleSheet(
         p: descriptionTextFont.copyWith(

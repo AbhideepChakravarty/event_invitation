@@ -73,6 +73,8 @@ class EventAppRouteParser
         navData = EventAppNavigatorData.people(second);
       } else if (first == "qnas") {
         navData = EventAppNavigatorData.qna(second);
+      } else if (first == "mememtos") {
+        navData = EventAppNavigatorData.memento(second);
       } else {
         navData = EventAppNavigatorData.unknown();
       }

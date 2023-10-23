@@ -12,6 +12,7 @@ class EventAppNavigatorData {
     "/qnas",
     "/people",
     "/userProfile",
+    "/mementos",
     //---------------
     "/counters/serve",
     "/counters/history",
@@ -97,6 +98,10 @@ class EventAppNavigatorData {
   EventAppNavigatorData.qna(String qnaRef)
       : id = qnaRef,
         pathParts = ["qnas"];
+
+  EventAppNavigatorData.memento(String mementoRef)
+      : id = mementoRef,
+        pathParts = ["mementos"];
 
   EventAppNavigatorData.people(String peopleRef)
       : id = peopleRef,

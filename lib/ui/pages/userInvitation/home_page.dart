@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
     String phoneNumber = FirebaseAuthHelper().getUser!.phoneNumber!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Page'),
+        title: const Text('Home'),
         automaticallyImplyLeading: false,
       ),
       body: Column(

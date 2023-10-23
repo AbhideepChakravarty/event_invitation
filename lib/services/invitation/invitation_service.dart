@@ -7,23 +7,50 @@ import 'invitation_data.dart';
 import 'invitation_tile.dart';
 
 class InvitationService {
+  // Private constructor
+  InvitationService._();
+
+  // Static instance variable
+  static final InvitationService _instance = InvitationService._();
+
+  // Public factory method to access the instance
+  factory InvitationService() {
+    return _instance;
+  }
   final CollectionReference invitationsCollection =
       FirebaseFirestore.instance.collection('invitations');
 
   final CollectionReference textBlockCollection =
       FirebaseFirestore.instance.collection('textBlocks');
 
-  Future<InvitationData> fetchData(
-      String invitationCode, BuildContext context) async {
-    print("Fetching invitation with code as " + invitationCode);
+  final Map<String, InvitationData> _retrievedInvitations = {};
+  final Map<String, int> _fetchCounts = {};
 
+  Future<InvitationData> fetchData(String invitationCode) async {
+    print("Fetching invitation with code as " + invitationCode);
+    return _fetchAndCacheData(invitationCode);
+    /*if (_fetchCounts.containsKey(invitationCode)) {
+      int counter = _fetchCounts[invitationCode] ?? 0;
+      if (counter >= 5) {
+        return _fetchAndCacheData(invitationCode);
+      } else if (_retrievedInvitations.containsKey(invitationCode)) {
+        return _retrievedInvitations[invitationCode]!;
+      } else {
+        _fetchCounts[invitationCode] = ++counter;
+        return _fetchAndCacheData(invitationCode);
+      }
+    } else {
+      return _fetchAndCacheData(invitationCode);
+    }*/
+  }
+
+  Future<InvitationData> _fetchAndCacheData(String invitationCode) async {
     final invitationDoc = await invitationsCollection.doc(invitationCode).get();
 
     if (!invitationDoc.exists) {
+      print("Invitation not found");
       throw Exception("Invitation not found");
     }
-
-    //final documentSnapshot = invitationDoc.data() as Map<String, dynamic>;
 
     InvitationData invitationData = InvitationData(
       primaryText: invitationDoc['primaryText'],
@@ -33,8 +60,11 @@ class InvitationService {
       invitationDetailsImg: invitationDoc['invitationDetailsImg'],
       dbId: invitationDoc.id,
     );
-    Provider.of<InvitationProvider>(context, listen: false)
-        .setInvitation(invitationData);
+    invitationData.videoUrl = invitationDoc['videoUrl'];
+    invitationData.thumbnailURL = invitationDoc['thumbnailURL'];
+    _retrievedInvitations[invitationCode] = invitationData;
+    _fetchCounts[invitationCode] = 1; // Reset the counter to 0
+
     return invitationData;
   }
 

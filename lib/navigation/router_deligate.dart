@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
 import '../ui/helpers/security/secure_page.dart';
+import '../ui/memento/memento_page.dart';
 import '../ui/pages/login/login_page.dart';
 import '../ui/pages/page/page_page.dart';
 import '../ui/pages/userInvitation/home_page.dart';
@@ -188,6 +189,15 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
             key: const ValueKey("QnA"),
             child: QnAPage(
               qnaRef: id.toString(),
+            ));
+      }
+
+      if (pathURL.startsWith("/mementos")) {
+        print("Found Memento page.");
+        page = MaterialPage(
+            key: const ValueKey("Memento"),
+            child: MementoPage(
+              mementoRef: id.toString(),
             ));
       }
 

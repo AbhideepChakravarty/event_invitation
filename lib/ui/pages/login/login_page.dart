@@ -127,9 +127,8 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (queryParams!["inv"] != null) {
-      _invitationData = _invitationService
-          .fetchData(queryParams!["inv"], context)
-          .then((value) async {
+      _invitationData =
+          _invitationService.fetchData(queryParams!["inv"]).then((value) async {
         Provider.of<InvitationProvider>(context, listen: false)
             .setInvitation(value);
         return value;
@@ -159,90 +158,84 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Align _getPhoneLoginWidgets(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 50),
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
+  Widget _getPhoneLoginWidgets(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20.0), // Adjust the padding as needed
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.0), // Apply circular corners
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Login',
+            style: TextStyle(
+              color: Colors.purple[700],
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          const SizedBox(height: 20),
+          Row(
             children: <Widget>[
-              Text(
-                'Login',
-                style: TextStyle(
-                  color: Colors.purple[700],
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+              ISDDropdownWidget(
+                initialValue: dropdownValue,
+                onChanged: (newValue) {
+                  // Handle the value change here
+                  dropdownValue = newValue;
+                  // You can update your state or perform other actions based on the new value
+                },
               ),
-              const SizedBox(height: 20),
-              Row(
-                children: <Widget>[
-                  ISDDropdownWidget(
-                    initialValue: dropdownValue,
-                    onChanged: (newValue) {
-                      // Handle the value change here
-                      dropdownValue = newValue;
-                      // You can update your state or perform other actions based on the new value
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: TextField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: 'Phone Number',
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple.shade700),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.purple.shade700),
-                        ),
-                      ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    hintText: 'Phone Number',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple.shade700),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple.shade700),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  // Implement login functionality here
-                  String phoneNumber =
-                      dropdownValue + _phoneController.text.trim();
-                  print(phoneNumber); // for testing
-                  if (kIsWeb) {
-                    await _authHelper
-                        .signInWithPhoneNumber(phoneNumber)
-                        .then((confirmationResult) {
-                      _openOTPDialog(confirmationResult, context);
-                    });
-                  } else {
-                    _authHelper.verifyPhoneNumber(
-                      phoneNumber,
-                      () => _onVerificationCompleted(context),
-                      (e) => _onVerificationFailed(context, e),
-                      (verificationId, resendToken) =>
-                          _onCodeSent(verificationId, resendToken, context),
-                      (verificationId) =>
-                          _onCodeAutoRetrievalTimeout(verificationId, context),
-                    );
-                  }
-                },
-                child: const Text(
-                  'Sign In',
-                  style: TextStyle(color: Colors.white),
                 ),
-              )
+              ),
             ],
           ),
-        ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () async {
+              // Implement login functionality here
+              String phoneNumber = dropdownValue + _phoneController.text.trim();
+              print(phoneNumber); // for testing
+              if (kIsWeb) {
+                await _authHelper
+                    .signInWithPhoneNumber(phoneNumber)
+                    .then((confirmationResult) {
+                  _openOTPDialog(confirmationResult, context);
+                });
+              } else {
+                _authHelper.verifyPhoneNumber(
+                  phoneNumber,
+                  () => _onVerificationCompleted(context),
+                  (e) => _onVerificationFailed(context, e),
+                  (verificationId, resendToken) =>
+                      _onCodeSent(verificationId, resendToken, context),
+                  (verificationId) =>
+                      _onCodeAutoRetrievalTimeout(verificationId, context),
+                );
+              }
+            },
+            child: const Text(
+              'Sign In',
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
       ),
     );
   }
@@ -260,6 +253,7 @@ class LoginPage extends StatelessWidget {
         }
 
         final invitation = snapshot.data!;
+        final gapHeight = MediaQuery.of(context).size.height < 800 ? 0.3 : 0.4;
         return Scaffold(
           body: Stack(
             children: [
@@ -280,15 +274,17 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 child: Container(
-                  alignment: Alignment.bottomCenter,
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       //A sized box with height of half the screen size
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.4,
+                        height: MediaQuery.of(context).size.height * gapHeight,
                       ),
+
                       Text(
                         invitation.primaryText,
                         style: Provider.of<FontProvider>(context)
@@ -300,21 +296,24 @@ class LoginPage extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       //const SizedBox(height: 20),
-                      SizedBox(
+                      Expanded(
                         //height: 105,
-                        child: Text(
-                          invitation.secondaryText,
-                          style: Provider.of<FontProvider>(context)
-                              .secondaryTextFont
-                              .copyWith(
-                                fontSize: 30,
-                                color: Colors.white,
-                              ),
-                          textAlign: TextAlign.center,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            invitation.secondaryText,
+                            style: Provider.of<FontProvider>(context)
+                                .secondaryTextFont
+                                .copyWith(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
 
-                      Expanded(child: _getPhoneLoginWidgets(context)),
+                      _getPhoneLoginWidgets(context),
                     ],
                   ),
                 ),

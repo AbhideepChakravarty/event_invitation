@@ -44,7 +44,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<InvitationData>(
-      future: _invitationService.fetchData(widget.invitationCode, context),
+      future: _invitationService.fetchData(widget.invitationCode),
       builder: (BuildContext context, AsyncSnapshot<InvitationData> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is being fetched
@@ -64,7 +64,8 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
         } else {
           // Data is available, build the scaffold
           _invitationData = snapshot.data!;
-
+          Provider.of<InvitationProvider>(context, listen: false)
+              .setInvitation(_invitationData);
           return Scaffold(
             body: Stack(
               children: [
@@ -105,6 +106,8 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   }
 
   Widget _buildContent() {
+    double primaryTextFontSize =
+        MediaQuery.of(context).size.height > 800 ? 60 : 50;
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
@@ -120,13 +123,17 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                   style: Provider.of<FontProvider>(context)
                       .primaryTextFont
                       .copyWith(
-                        fontSize: 60,
-                        color: Colors.purple[900],
+                        fontSize: primaryTextFontSize,
+                        color: Colors.amber[600],
                       )),
             ),
           ),
           // Add more content here
-          const InviationVideoTile(),
+          _invitationData.videoUrl != null
+              ? InviationVideoTile(
+                  videoUrl: _invitationData.videoUrl ?? '',
+                  thumbnailURL: _invitationData.thumbnailURL ?? '')
+              : Container(),
           const SizedBox(height: 20),
           _buildInvitationTiles(context),
         ],
