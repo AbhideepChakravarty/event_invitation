@@ -51,7 +51,7 @@ class InvitationService {
       print("Invitation not found");
       throw Exception("Invitation not found");
     }
-
+    print("Found invitation");
     InvitationData invitationData = InvitationData(
       primaryText: invitationDoc['primaryText'],
       secondaryText: invitationDoc['secondaryText'],
@@ -62,9 +62,13 @@ class InvitationService {
     );
     invitationData.videoUrl = invitationDoc['videoUrl'];
     invitationData.thumbnailURL = invitationDoc['thumbnailURL'];
+    
+    if (invitationDoc['primaryTextColor'] != null) {
+      invitationData.primaryTextColor = invitationDoc['primaryTextColor'];
+    }
     _retrievedInvitations[invitationCode] = invitationData;
     _fetchCounts[invitationCode] = 1; // Reset the counter to 0
-
+    print("Invitation data fetched successfully");
     return invitationData;
   }
 
@@ -78,10 +82,18 @@ class InvitationService {
 
     List<InvitationTileData> tiles = [];
 
-    for (QueryDocumentSnapshot tileSnapshot in tilesQuerySnapshot.docs) {
+    for (var tileSnapshot in tilesQuerySnapshot.docs) {
+      // If the invitationDoc contains a "visibility" key, then fetch its value
+
       final textBlock = tileSnapshot['textBlock'];
-      final tileData = await _getTileText(textBlock, tileSnapshot, lang);
-      if (tileData != null) {
+      final InvitationTileData? tileData =
+          await _getTileText(textBlock, tileSnapshot, lang);
+      if (tileSnapshot.data().containsKey("visibility") && tileSnapshot['visibility'] != null) {
+        bool visibility = tileSnapshot['visibility'];
+        tileData!.visibility = visibility;
+        print("For invitation $tileData.title, visibility is $visibility");
+      }
+      if (tileData != null && tileData.visibility) {
         tiles.add(tileData);
       }
     }

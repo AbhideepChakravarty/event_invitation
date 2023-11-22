@@ -7,6 +7,7 @@ class InvitationData {
   final String invitationCode;
   final String invitationImage;
   final String invitationDetailsImg;
+  String primaryTextColor = "#000000";
   late String? thumbnailURL;
   late String? videoUrl;
   late List<InvitationTileData>? tiles;

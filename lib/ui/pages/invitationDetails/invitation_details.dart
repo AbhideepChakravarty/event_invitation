@@ -1,6 +1,7 @@
 import 'package:event_invitation/services/helper/language_provider.dart';
 import 'package:event_invitation/services/invitation/invitation_notifier.dart';
 import 'package:event_invitation/ui/helpers/theme/font_provider.dart';
+import 'package:event_invitation/ui/helpers/theme/hexcolor.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/components/invitation_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,6 +109,8 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   Widget _buildContent() {
     double primaryTextFontSize =
         MediaQuery.of(context).size.height > 800 ? 60 : 50;
+        print("Colors: " + _invitationData.primaryTextColor + " " + _invitationData.primaryTextColor.substring(
+                                1, _invitationData.primaryTextColor.length));
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
@@ -124,7 +127,8 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                       .primaryTextFont
                       .copyWith(
                         fontSize: primaryTextFontSize,
-                        color: Colors.amber[600],
+                        //Set primary text color using hex code given in invitation data
+                        color: HexColor (_invitationData.primaryTextColor)
                       )),
             ),
           ),

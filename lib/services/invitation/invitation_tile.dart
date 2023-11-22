@@ -4,6 +4,7 @@ class InvitationTileData {
   final Uri image;
   final String type;
   final String ref;
+  bool visibility = true;
 
   InvitationTileData({
     required this.title,
@@ -11,5 +12,6 @@ class InvitationTileData {
     required this.image,
     required this.type,
     required this.ref,
+    this.visibility = true,
   });
 }

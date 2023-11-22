@@ -16,6 +16,7 @@ class PeopleEntry {
   final String relation;
   final String description;
   final ImageAlignment imageAlignment;
+  bool visbility = true;
 
   PeopleEntry({
     required this.name,
@@ -23,7 +24,10 @@ class PeopleEntry {
     required this.relation,
     required this.description,
     required this.imageAlignment,
+    this.visbility = true,
   });
+
+  get isVisible => visbility;
 }
 
 enum ImageAlignment {

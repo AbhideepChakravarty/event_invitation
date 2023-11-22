@@ -68,7 +68,7 @@ class InvitationTile extends StatelessWidget {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: [Colors.white, Colors.transparent],
-                  ),
+                  )
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

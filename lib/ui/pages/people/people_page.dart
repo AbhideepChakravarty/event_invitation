@@ -49,7 +49,10 @@ class PeoplePage extends StatelessWidget {
                             .descriptionTextFont
                             .copyWith(fontSize: 16, color: Colors.black))),
                 ...peopleData.entries
-                    .map((entry) => PeopleEntryWidget(entry: entry)),
+                    .map((entry) { 
+                      print("Entry: ${entry.name} is ${entry.isVisible}");
+                      return entry.isVisible ? PeopleEntryWidget(entry: entry) : Container();
+                      }),
               ],
             ),
           ),

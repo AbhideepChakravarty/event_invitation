@@ -48,6 +48,11 @@ class PeopleService {
         final entryDesc = entryTextBlockDoc['desc'];
         final ImageAlignment entryImageAlignment =
             ImageAlignment.values[entryImageAlign];
+        var visibility = true;
+        if (entryDoc.data().containsKey("visibility") && entryDoc['visibility'] != null) {
+          visibility = entryDoc['visibility'];
+          print("For entry $entryName, visibility is $visibility");
+        }
 
         entries.add(PeopleEntry(
           name: entryName,
@@ -55,6 +60,7 @@ class PeopleService {
           relation: entryRelation,
           description: entryDesc,
           imageAlignment: entryImageAlignment,
+          visbility: visibility,
         ));
       }
 
