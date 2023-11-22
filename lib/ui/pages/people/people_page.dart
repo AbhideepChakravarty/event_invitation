@@ -44,7 +44,7 @@ class PeoplePage extends StatelessWidget {
               children: [
                 Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Text(peopleData.description,
+                    child: peopleData.description == "" ? Container() : Text(peopleData.description,
                         style: Provider.of<FontProvider>(context)
                             .descriptionTextFont
                             .copyWith(fontSize: 16, color: Colors.black))),

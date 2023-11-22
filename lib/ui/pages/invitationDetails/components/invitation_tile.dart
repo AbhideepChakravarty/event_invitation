@@ -41,25 +41,7 @@ class InvitationTile extends StatelessWidget {
                 ),
                 width: MediaQuery.of(context).size.width,
                 height: 200,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [Colors.white, Colors.transparent],
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(tile.title,
-                        style: Provider.of<FontProvider>(context)
-                            .secondaryTextFont
-                            .copyWith(fontSize: 24, color: Color(0xFF980147))),
-                  ),
-                ),
+                child: _getTitelWidget(context),
               ),
               if (tile.footer != null)
                 Padding(
@@ -74,6 +56,28 @@ class InvitationTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Container _getTitelWidget(BuildContext context) {
+    return tile.title == "" ? Container() :Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [Colors.white, Colors.transparent],
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(tile.title,
+                      style: Provider.of<FontProvider>(context)
+                          .secondaryTextFont
+                          .copyWith(fontSize: 24, color: Color(0xFF980147))),
+                ),
+              );
   }
 
   _getEventAppNavigatorDataByTileType(InvitationTileData tile) {

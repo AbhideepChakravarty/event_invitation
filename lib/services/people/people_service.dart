@@ -11,6 +11,7 @@ class PeopleService {
         .languageCode;
 
     try {
+      print("Fetching people data for $peopleRef");
       final peopleDoc = await FirebaseFirestore.instance
           .collection('people')
           .doc(peopleRef)
@@ -26,11 +27,11 @@ class PeopleService {
 
       final title = textBlockDoc['title'];
       final description = textBlockDoc['desc'];
-
+      print("Worked on people data for $peopleRef upto entries");
       final entries = <PeopleEntry>[];
       final entriesSnapshot =
           await peopleDoc.reference.collection('entries').orderBy('seq').get();
-
+      print("objects fetched: ${entriesSnapshot.docs.length}");
       for (var entryDoc in entriesSnapshot.docs) {
         final entryImage = entryDoc['image'];
         final int entryImageAlign = entryDoc['imageAlign'];

@@ -69,7 +69,7 @@ class PagePage extends StatelessWidget {
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child:
-                  Text(content.text, style: fontProvider.descriptionTextFont)),
+                    Text(content.text.replaceAll('\\n', '\n'), style: fontProvider.descriptionTextFont)),
         );
       } else if (content is ImageContent) {
         widgets.add(
@@ -92,7 +92,7 @@ class PagePage extends StatelessWidget {
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Image.network(image.toString(), fit: BoxFit.cover),
+                  child: Image.network(image.toString(), fit: BoxFit.scaleDown),
                 );
               }).toList(),
             ),
