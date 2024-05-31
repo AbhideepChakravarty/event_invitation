@@ -12,7 +12,8 @@ class EventAppNavigatorData {
     "/qnas",
     "/people",
     "/userProfile",
-    "/mementos",
+    "/mementoes",
+    "/upload",
     //---------------
     "/counters/serve",
     "/counters/history",
@@ -101,12 +102,16 @@ class EventAppNavigatorData {
 
   EventAppNavigatorData.memento(String mementoRef)
       : id = mementoRef,
-        pathParts = ["mementos"];
+        pathParts = ["mementoes"];
 
   EventAppNavigatorData.people(String peopleRef)
       : id = peopleRef,
         pathParts = ["people"];
 
+  EventAppNavigatorData.upload(String pageRef, Map<String, dynamic> queryParams)
+      : id = pageRef,
+        qp = queryParams,
+        pathParts = ["upload"];
   //-------------------------------------------------------------------------------
   //pathURL = "/login";
   EventAppNavigatorData.menus()

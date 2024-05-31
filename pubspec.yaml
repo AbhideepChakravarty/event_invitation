@@ -50,6 +50,12 @@ dependencies:
   google_fonts: ^4.0.4
   flutter_markdown: ^0.6.15
   url_launcher: ^6.1.11
+  flutter_speed_dial: ^7.0.0
+  file_picker: ^5.3.1
+  video_thumbnail: ^0.5.3
+  firebase_storage: ^11.6.0
+  firebase_ui_firestore: 1.5.14
+  cached_network_image: ^3.2.3
   
 dev_dependencies:
   flutter_test:

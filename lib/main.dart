@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:event_invitation/navigation/router_deligate.dart';
 import 'package:event_invitation/services/invitation/invitation_notifier.dart';
+import 'package:event_invitation/services/memento/file_upload_data.dart';
+import 'package:event_invitation/services/memento/media_provider.dart';
 import 'package:event_invitation/services/userProfile/user_profile_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +17,8 @@ import 'navigation/nav_data.dart';
 import 'navigation/path_parser.dart';
 import 'services/helper/language_provider.dart';
 import 'services/helper/user_profile_provider.dart';
+import 'services/memento/album_media_provider.dart';
+import 'services/memento/album_provider.dart';
 import 'ui/helpers/theme/mytheme.dart';
 import 'ui/helpers/theme/font_provider.dart';
 
@@ -67,6 +71,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<FontProvider>(create: (_) {
           return FontProvider();
         }),
+       ChangeNotifierProvider<UploadManager>(create: (_) {
+          return UploadManager();
+        }),
+        ChangeNotifierProvider<MediaProvider>(create: (_) {
+          return MediaProvider();
+        }),
+        ChangeNotifierProvider<AlbumProvider>(create: (_) {
+          return AlbumProvider();
+        }),
+        ChangeNotifierProvider<AlbumMediaProvider>(create: (_) {
+          return AlbumMediaProvider();
+        }),
+        
       ],
       child: FutureBuilder<User?>(
           future: FirebaseAuthHelper().auth.userChanges().first,

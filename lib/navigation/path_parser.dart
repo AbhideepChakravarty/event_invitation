@@ -19,10 +19,10 @@ class EventAppRouteParser
     //handle '/'
     if (uri.pathSegments.isEmpty) {
       if (uri.toString() != "/") {
-        //print("Paring for home page but instantiating login page");
+        print("Paring for home page but instantiating login page");
         navData = EventAppNavigatorData.login({});
       } else {
-        //print("Paring for home page");
+        print("Paring for home page");
         navData = EventAppNavigatorData.home({});
       }
     }
@@ -73,8 +73,10 @@ class EventAppRouteParser
         navData = EventAppNavigatorData.people(second);
       } else if (first == "qnas") {
         navData = EventAppNavigatorData.qna(second);
-      } else if (first == "mememtos") {
+      } else if (first == "mementoes") {
         navData = EventAppNavigatorData.memento(second);
+      } else if (first == "upload") {
+        navData = EventAppNavigatorData.upload(second,queryParams);
       } else {
         navData = EventAppNavigatorData.unknown();
       }

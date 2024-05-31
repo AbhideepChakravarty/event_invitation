@@ -9,6 +9,7 @@ import 'package:collection/collection.dart';
 
 import '../ui/helpers/security/secure_page.dart';
 import '../ui/memento/memento_page.dart';
+import '../ui/memento/upload_page.dart';
 import '../ui/pages/login/login_page.dart';
 import '../ui/pages/page/page_page.dart';
 import '../ui/pages/userInvitation/home_page.dart';
@@ -192,7 +193,7 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
             ));
       }
 
-      if (pathURL.startsWith("/mementos")) {
+      if (pathURL.startsWith("/mementoes")) {
         print("Found Memento page.");
         page = MaterialPage(
             key: const ValueKey("Memento"),
@@ -209,6 +210,18 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
               peopleRef: id.toString(),
             ));
       }
+
+      if (pathURL.startsWith("/upload")) {
+        print("Found Upload page.");
+        page = MaterialPage(
+            key: const ValueKey("Upload"),
+            child: UploadPage(
+              mementoRef: id.toString(),
+              albumFlag: data.qp["album"] == true || data.qp["album"] == "true",
+            ));
+      }
+
+      
     }
     return page;
   }
