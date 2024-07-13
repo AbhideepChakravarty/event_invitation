@@ -10,11 +10,8 @@ class EventAppRouteParser
     print("parseRouteInformation is called.");
     final uri = Uri.parse(routeInformation.location.toString());
     final queryParams = uri.queryParameters;
-    print("Received URI - " +
-        uri.toString() +
-        " - " +
-        uri.pathSegments.length.toString());
-    print("Qp in parser = " + queryParams.toString());
+    print("Received URI - $uri - ${uri.pathSegments.length}");
+    print("Qp in parser = $queryParams");
     EventAppNavigatorData navData;
     //handle '/'
     if (uri.pathSegments.isEmpty) {
@@ -77,6 +74,8 @@ class EventAppRouteParser
         navData = EventAppNavigatorData.memento(second);
       } else if (first == "upload") {
         navData = EventAppNavigatorData.upload(second,queryParams);
+      } else if (first == "albums") {
+        navData = EventAppNavigatorData.albumDetails(second,queryParams);
       } else {
         navData = EventAppNavigatorData.unknown();
       }
@@ -106,7 +105,7 @@ class EventAppRouteParser
     } else {
       navData = EventAppNavigatorData.unknown();
     }
-    print("Nav = " + navData.toString());
+    print("Nav = $navData");
     return navData;
   }
 

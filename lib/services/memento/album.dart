@@ -16,4 +16,9 @@ class Album {
     required this.albumRef,
     required this.albumContentList,
   });
+
+  @override
+  String toString() {
+    return 'Album{title: $title, itemCount: $itemCount, thumbnailUrl: $thumbnailUrl, docdata: $docdata, albumRef: $albumRef, albumContentList: $albumContentList}';
+  }
 }

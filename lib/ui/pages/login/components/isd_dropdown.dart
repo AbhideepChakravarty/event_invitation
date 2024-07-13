@@ -4,7 +4,7 @@ class ISDDropdownWidget extends StatefulWidget {
   final String initialValue;
   final ValueChanged<String> onChanged;
 
-  ISDDropdownWidget({required this.initialValue, required this.onChanged});
+  const ISDDropdownWidget({super.key, required this.initialValue, required this.onChanged});
 
   @override
   _ISDDropdownWidgetState createState() => _ISDDropdownWidgetState();
@@ -34,7 +34,7 @@ class _ISDDropdownWidgetState extends State<ISDDropdownWidget> {
       onChanged: (String? newValue) {
         setState(() {
           dropdownValue = newValue!;
-          widget.onChanged(newValue!);
+          widget.onChanged(newValue);
         });
       },
       items: <String>['+1', '+91', '+44', '+61']

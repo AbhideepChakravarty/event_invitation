@@ -22,7 +22,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
     super.initState();
     audioPlayer = AudioPlayer();
     _initializeAudioPlayer();
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -58,7 +58,7 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
   @override
   void dispose() {
     audioPlayer.dispose();
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -114,15 +114,15 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: Icon(Icons.play_arrow),
+                icon: const Icon(Icons.play_arrow),
                 onPressed: _isPlaying ? null : _play,
               ),
               IconButton(
-                icon: Icon(Icons.pause),
+                icon: const Icon(Icons.pause),
                 onPressed: _isPlaying ? _pause : null,
               ),
               IconButton(
-                icon: Icon(Icons.stop),
+                icon: const Icon(Icons.stop),
                 onPressed: _isPlaying ? _stop : null,
               ),
             ],

@@ -4,14 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../helpers/components/circular_progress_indicator.dart';
-import '../../../helpers/media/video_player.dart';
 import '../../../helpers/theme/font_provider.dart';
 
 class InviationVideoTile extends StatefulWidget {
   final String videoUrl;
   final String thumbnailURL;
 
-  InviationVideoTile(
+  const InviationVideoTile(
       {super.key, required this.thumbnailURL, required this.videoUrl});
 
   @override
@@ -55,7 +54,7 @@ class _InviationVideoTileState extends State<InviationVideoTile> {
                 child: Text('Invitation',
                     style: Provider.of<FontProvider>(context)
                         .secondaryTextFont
-                        .copyWith(fontSize: 24, color: Color(0xFF980147)))),
+                        .copyWith(fontSize: 24, color: const Color(0xFF980147)))),
             const SizedBox(height: 16),
             // Add video player widget here
             /*ChewieVideoPlayer(
@@ -66,7 +65,7 @@ class _InviationVideoTileState extends State<InviationVideoTile> {
                   
                 thumbnailURL:
                     "https://d1csarkz8obe9u.cloudfront.net/posterpreviews/wedding-poster-template-design-0ba8e5d005c628883315ade7d34ef826_screen.jpg?ts=1655033812")*/
-            chewieController == null ? Center(child: AdaptiveCircularProgressIndicator(labelText: "Loading Video....",)) : Chewie(
+            chewieController == null ? const Center(child: AdaptiveCircularProgressIndicator(labelText: "Loading Video....",)) : Chewie(
               controller: chewieController,
             ),
           ],

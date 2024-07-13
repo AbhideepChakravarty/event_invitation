@@ -22,12 +22,14 @@ class AlbumMediaProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchMedia(String albumRef) async {
-    if (_isFetching || _currentAlbumRef == albumRef) return;
+    if (_isFetching || _currentAlbumRef == albumRef) {
+      notifyListeners();
+      return;}
 
     _isFetching = true;
     _errorMessage = null;
     _currentAlbumRef = albumRef;
-    notifyListeners();
+    //notifyListeners();
 
     try {
       var mediaSnapshot = await _firestore.collection('uploadMetadata/$albumRef/content').get();

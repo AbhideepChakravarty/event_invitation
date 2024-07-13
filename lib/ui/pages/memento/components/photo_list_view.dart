@@ -1,27 +1,41 @@
-import 'package:event_invitation/services/memento/memento_content.dart';
-import 'package:event_invitation/ui/memento/components/fullscreen_view.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
-import '../../../services/memento/media_content.dart';
-import '../../../services/memento/media_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../services/memento/media_content.dart';
+import '../../../../services/memento/media_provider.dart';
+import '../../../../services/memento/memento_content.dart';
+import 'fullscreen_view.dart';
 
-
-class MediaListWidget extends StatelessWidget {
+class MediaListWidget extends StatefulWidget {
   final MementoContent mementoContent;
+  final ScrollController scrollController;
 
-  const MediaListWidget({Key? key, required this.mementoContent}) : super(key: key);
+  const MediaListWidget(
+      {Key? key, required this.mementoContent, required this.scrollController})
+      : super(key: key);
+
+  @override
+  _MediaListWidgetState createState() => _MediaListWidgetState();
+}
+
+class _MediaListWidgetState extends State<MediaListWidget> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
+      mediaProvider.initialize(widget.mementoContent.uploadIds);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-    mediaProvider.initialize(mementoContent.uploadIds);
-
     return Consumer<MediaProvider>(
       builder: (context, mediaProvider, child) {
         return NotificationListener<ScrollNotification>(
           onNotification: (scrollInfo) {
-            if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent &&
+            if (scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent &&
                 !mediaProvider.isLoading) {
               mediaProvider.fetchNextPage();
             }
@@ -50,7 +64,7 @@ class MediaListWidget extends StatelessWidget {
                         color: Colors.black.withOpacity(0.2),
                         spreadRadius: 1,
                         blurRadius: 5,
-                        offset: Offset(0, 3),
+                        offset: const Offset(0, 3),
                       )
                     ],
                   ),
@@ -59,8 +73,10 @@ class MediaListWidget extends StatelessWidget {
                     child: CachedNetworkImage(
                       imageUrl: mediaContent.thumbnailUrl,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
                 ),

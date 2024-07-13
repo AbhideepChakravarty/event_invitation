@@ -53,7 +53,7 @@ class FirebaseAuthHelper with ChangeNotifier {
           context: context,
           builder: (builder) => Container(
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.all(15),
+              margin: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(5),

@@ -75,7 +75,7 @@ class InvitationTile extends StatelessWidget {
                   child: Text(tile.title,
                       style: Provider.of<FontProvider>(context)
                           .secondaryTextFont
-                          .copyWith(fontSize: 24, color: Color(0xFF980147))),
+                          .copyWith(fontSize: 24, color: const Color(0xFF980147))),
                 ),
               );
   }

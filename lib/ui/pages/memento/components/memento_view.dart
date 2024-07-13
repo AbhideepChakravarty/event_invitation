@@ -5,16 +5,21 @@ import 'package:event_invitation/services/memento/memento_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/memento/file_upload_data.dart';
-import '../../../services/memento/memnto_service.dart';
+import '../../../../services/memento/file_upload_data.dart';
+import '../../../../services/memento/memnto_service.dart';
 import 'album_list_widget.dart';
 import 'photo_list_view.dart';
 
 class MementoView extends StatefulWidget {
   final String mementoId;
   final int type;
+  final ScrollController scrollController;
 
-  const MementoView({super.key, required this.mementoId, required this.type});
+  const MementoView(
+      {super.key,
+      required this.mementoId,
+      required this.type,
+      required this.scrollController});
 
   @override
   State<MementoView> createState() => _MementoViewState();
@@ -22,12 +27,11 @@ class MementoView extends StatefulWidget {
 
 class _MementoViewState extends State<MementoView> {
   StreamSubscription<DocumentSnapshot>? _uploadStreamSubscription;
-  
 
   @override
   void initState() {
     super.initState();
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final uploadId =
           Provider.of<UploadManager>(context, listen: false).currentUploadId;
@@ -45,8 +49,8 @@ class _MementoViewState extends State<MementoView> {
         .listen((snapshot) {
       if (snapshot.exists && snapshot.data()!['status'] == 10) {
         print("Publish completed.");
-        Provider.of<UploadManager>(context, listen: false)
-            .setCurrentUploadId = null;
+        Provider.of<UploadManager>(context, listen: false).setCurrentUploadId =
+            null;
         _showRefreshSnackbar();
       }
     }, onError: (error) {
@@ -67,8 +71,6 @@ class _MementoViewState extends State<MementoView> {
       ),
     );
   }
-
-  
 
   @override
   void dispose() {
@@ -92,10 +94,14 @@ class _MementoViewState extends State<MementoView> {
         final mementoContent = snapshot.data!;
 
         if (widget.type == 1) {
-          return MediaListWidget(mementoContent: mementoContent);
+          return MediaListWidget(
+            mementoContent: mementoContent,
+            scrollController: widget.scrollController,
+          );
         } else if (widget.type == 2) {
           return AlbumListWidget(
-            mementoContent: mementoContent
+            mementoContent: mementoContent,
+            scrollController: widget.scrollController,
           );
         } else {
           throw ArgumentError('Unsupported memento type: ${widget.type}');

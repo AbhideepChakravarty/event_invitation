@@ -1,8 +1,4 @@
-import 'package:event_invitation/services/invitation/invitation_notifier.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../helper/language_provider.dart';
 import 'invitation_data.dart';
 import 'invitation_tile.dart';
 
@@ -27,7 +23,7 @@ class InvitationService {
   final Map<String, int> _fetchCounts = {};
 
   Future<InvitationData> fetchData(String invitationCode) async {
-    print("Fetching invitation with code as " + invitationCode);
+    print("Fetching invitation with code as $invitationCode");
     return _fetchAndCacheData(invitationCode);
     /*if (_fetchCounts.containsKey(invitationCode)) {
       int counter = _fetchCounts[invitationCode] ?? 0;
@@ -104,7 +100,7 @@ class InvitationService {
       String textBlock, QueryDocumentSnapshot tileSnapshot, String lang) async {
     InvitationTileData? tileData;
     try {
-      print("Working with " + textBlock + "-" + lang);
+      print("Working with $textBlock-$lang");
       await textBlockCollection
           .doc("$textBlock-$lang")
           .get()

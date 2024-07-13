@@ -1,5 +1,5 @@
-import 'package:event_invitation/main.dart';
-import 'package:event_invitation/services/userProfile/user_profile_data.dart';
+import 'package:event_invitation/services/memento/album.dart';
+import 'package:event_invitation/ui/pages/memento/components/album_details_page.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/invitation_details.dart';
 import 'package:event_invitation/ui/pages/people/people_page.dart';
 import 'package:event_invitation/ui/pages/qna/qna_page.dart';
@@ -7,9 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
-import '../ui/helpers/security/secure_page.dart';
-import '../ui/memento/memento_page.dart';
-import '../ui/memento/upload_page.dart';
+import '../ui/pages/memento/memento_page.dart';
+import '../ui/pages/memento/upload_page.dart';
 import '../ui/pages/login/login_page.dart';
 import '../ui/pages/page/page_page.dart';
 import '../ui/pages/userInvitation/home_page.dart';
@@ -59,7 +58,7 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
 
   MaterialPage _buildMaterialPage(EventAppNavigatorData data) {
     MaterialPage? page;
-    print("RD load page by nav data: " + data.toString());
+    print("RD load page by nav data: $data");
     //Check is data is secured Page
     if (data.isSecuredPage()) {
       //Check if user is logged in and anonymous user
@@ -83,7 +82,7 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
           print("User not logged in and login page.");
           //If user is not logged in then redirect to login page
           page = MaterialPage(
-              key: ValueKey("Login"),
+              key: const ValueKey("Login"),
               child: LoginPage(
                 onTap: _loadPageByNavData,
                 targetPath: data,
@@ -99,8 +98,8 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
       page = _buildPage(data);
     }
 
-    print("Page: " + page!.key.toString());
-    return page as MaterialPage;
+    print("Page: ${page!.key}");
+    return page;
   }
 
   final List<MaterialPage> _pages = <MaterialPage>[];
@@ -109,7 +108,7 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
 
   @override
   Future<void> setNewRoutePath(EventAppNavigatorData configuration) async {
-    print("RD New config: " + configuration.toString());
+    print("RD New config: $configuration");
     /*if (configuration.pathParts.contains("login") &&
         FirebaseAuth.instance.currentUser != null) {
       //if anonymous user then continue else return
@@ -121,9 +120,9 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
   }
 
   void _loadPageByNavData(EventAppNavigatorData configuration) {
-    print("In load page by nav data: " + configuration.toString());
-    print("Condition: " +
-        (navData == null || !(navData!.isEqual(configuration))).toString());
+    print("In load page by nav data: $configuration");
+    print(
+        "Condition: ${navData == null || !(navData!.isEqual(configuration))}");
     if (navData == null || !(navData!.isEqual(configuration))) {
       navData = configuration;
 
@@ -140,14 +139,14 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
   MaterialPage? _buildPage(EventAppNavigatorData data) {
     MaterialPage? page;
     String pathURL = data.getPathURL().trim();
-    print("RD Path URL = " + pathURL);
-    print("RD Nav Data = " + data.toString());
+    print("RD Path URL = $pathURL");
+    print("RD Nav Data = $data");
     String? id = data.id;
     if (id == null) {
       print("id is null");
       if (pathURL.startsWith("/login")) {
         page = MaterialPage(
-          key: ValueKey("Login"),
+          key: const ValueKey("Login"),
           child: LoginPage(
             onTap: _loadPageByNavData,
             queryParams: data.qp,
@@ -166,22 +165,23 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
       }
       if (pathURL == "/userProfile") {
         print("Found User Profile.");
-        page = MaterialPage(
-            key: const ValueKey("UserProfile"), child: UserProfilePage());
+        page = const MaterialPage(
+            key: ValueKey("UserProfile"), child: UserProfilePage());
       }
     } else {
       //Here id is not null
       if (pathURL.startsWith("/invitations")) {
         print("Found Inv Details page.");
         page = MaterialPage(
-            key: ValueKey("InvitationDetails"),
+            key: const ValueKey("InvitationDetails"),
             child: InvitationDetailsPage(invitationCode: id.toString()));
       }
 
       if (pathURL.startsWith("/pages")) {
         print("Found pages page.");
         page = MaterialPage(
-            key: ValueKey("Pages"), child: PagePage(pageRef: id.toString()));
+            key: const ValueKey("Pages"),
+            child: PagePage(pageRef: id.toString()));
       }
 
       if (pathURL.startsWith("/qnas")) {
@@ -221,7 +221,15 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
             ));
       }
 
-      
+      if (pathURL.startsWith("/albums")) {
+        print("Found album details page.");
+
+        page = MaterialPage(
+            key: const ValueKey("AlbumDetails"),
+            child: AlbumDetailPage(
+              albumRef: id.toString(),
+            ));
+      }
     }
     return page;
   }

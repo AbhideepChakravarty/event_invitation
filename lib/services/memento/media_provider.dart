@@ -4,7 +4,7 @@ import 'memnto_service.dart';
 
 class MediaProvider with ChangeNotifier {
   final MementoService _mediaService = MementoService();
-  List<MediaContent> _contentList = [];
+  final List<MediaContent> _contentList = [];
   bool _isLoading = false;
   late PaginationHandler _paginationHandler;
 
@@ -39,3 +39,5 @@ class MediaProvider with ChangeNotifier {
 
   Future<void> fetchNextPage() => _fetchNextPage();
 }
+
+

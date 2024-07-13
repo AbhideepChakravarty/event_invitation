@@ -22,7 +22,7 @@ class InvitationDetailsPage extends StatefulWidget {
 class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   final ScrollController _scrollController = ScrollController();
   final InvitationService _invitationService = InvitationService();
-  double _scrollOffset = 0.0;
+  final double _scrollOffset = 0.0;
   late InvitationData _invitationData;
 
   @override
@@ -109,8 +109,8 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   Widget _buildContent() {
     double primaryTextFontSize =
         MediaQuery.of(context).size.height > 800 ? 60 : 50;
-        print("Colors: " + _invitationData.primaryTextColor + " " + _invitationData.primaryTextColor.substring(
-                                1, _invitationData.primaryTextColor.length));
+        print("Colors: ${_invitationData.primaryTextColor} ${_invitationData.primaryTextColor.substring(
+                                1, _invitationData.primaryTextColor.length)}");
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
@@ -162,7 +162,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
             tileList.add(const SizedBox(height: 20));
           }
 
-          print("Size of tiles = " + tileList.length.toString());
+          print("Size of tiles = ${tileList.length}");
           return Column(children: tileList);
         }
       },

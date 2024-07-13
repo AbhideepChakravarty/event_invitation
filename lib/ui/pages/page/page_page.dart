@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:event_invitation/services/page/page_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:provider/provider.dart';
 
 import '../../../services/helper/language_provider.dart';
@@ -16,7 +15,7 @@ class PagePage extends StatelessWidget {
   PagePage({Key? key, required this.pageRef}) : super(key: key);
 
   Future<PageData> _fetchPageData(String languageCode) async {
-    print("Fetching data in language code: " + languageCode);
+    print("Fetching data in language code: $languageCode");
     // Replace this with your actual data fetching logic
     return _pageService.fetchPageData(pageRef, languageCode);
   }
@@ -30,7 +29,7 @@ class PagePage extends StatelessWidget {
     return FutureBuilder<PageData>(
       future: _fetchPageData(languageCode),
       builder: (context, snapshot) {
-        print("Snapshot: " + snapshot.toString());
+        print("Snapshot: $snapshot");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {

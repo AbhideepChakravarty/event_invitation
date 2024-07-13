@@ -1,13 +1,15 @@
 import 'package:event_invitation/services/memento/memento_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../services/memento/album_provider.dart';
+import '../../../../services/memento/album_provider.dart';
 import 'album_tile.dart';
 
 class AlbumListWidget extends StatefulWidget {
   final MementoContent mementoContent;
+  final ScrollController scrollController;
 
-  const AlbumListWidget({Key? key, required this.mementoContent})
+  const AlbumListWidget(
+      {Key? key, required this.mementoContent, required this.scrollController})
       : super(key: key);
 
   @override

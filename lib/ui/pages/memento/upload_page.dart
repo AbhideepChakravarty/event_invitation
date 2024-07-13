@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:provider/provider.dart';
-import '../../services/memento/file_upload_data.dart';
-import '../../services/memento/upload_metadata_data.dart';
+import '../../../services/memento/file_upload_data.dart';
+import '../../../services/memento/upload_metadata_data.dart';
 import 'animated_publish_button.dart'; // Adjust the import based on your project structure
 import 'upload_media_tile.dart'; // Adjust the import based on your project structure
 // Import your UploadManager class
@@ -15,7 +15,8 @@ class UploadPage extends StatefulWidget {
   final String mementoRef;
   final bool albumFlag;
 
-  UploadPage({required this.mementoRef, required this.albumFlag});
+  const UploadPage(
+      {super.key, required this.mementoRef, required this.albumFlag});
 
   @override
   _UploadPageState createState() => _UploadPageState();
@@ -53,7 +54,7 @@ class _UploadPageState extends State<UploadPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("This is album page ? " + widget.albumFlag.toString());
+    print("This is album page ? ${widget.albumFlag}");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Upload Media"),
@@ -153,7 +154,7 @@ class _UploadPageState extends State<UploadPage> {
     var uploadManager = Provider.of<UploadManager>(context, listen: false);
     final List<String> filePaths = uploadManager.uploadPaths;
 
-    var uploadMetadata;
+    UploadMetadata uploadMetadata;
 
     if (widget.albumFlag) {
       // Populate the UploadMetadataDTO
@@ -232,24 +233,24 @@ class _UploadPageState extends State<UploadPage> {
         children: [
           TextFormField(
             controller: _titleController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Title',
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextFormField(
             controller: _descriptionController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Description',
               border: OutlineInputBorder(),
             ),
             maxLines: 3,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextFormField(
             controller: _tagsController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Tags (comma separated)',
               border: OutlineInputBorder(),
             ),

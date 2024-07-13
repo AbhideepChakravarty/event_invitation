@@ -9,7 +9,7 @@ class QnAPage extends StatelessWidget {
   final String qnaRef;
   final QnAService qnaService = QnAService();
 
-  QnAPage({required this.qnaRef});
+  QnAPage({super.key, required this.qnaRef});
 
   @override
   Widget build(BuildContext context) {

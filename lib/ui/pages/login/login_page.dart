@@ -6,7 +6,6 @@ import 'package:event_invitation/ui/pages/login/components/isd_dropdown.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
-import 'package:flutter_signin_button/button_builder.dart';
 import 'package:provider/provider.dart';
 
 import '../../../navigation/router_deligate.dart';
@@ -44,13 +43,13 @@ class LoginPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Verification Failed'),
+          title: const Text('Verification Failed'),
           content: Text(
-            e.message ?? 'An unknown error occurred.' + e.message! + e.code,
+            e.message ?? 'An unknown error occurred.${e.message!}${e.code}',
           ),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -70,11 +69,11 @@ class LoginPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Enter the SMS Code'),
+          title: const Text('Enter the SMS Code'),
           content: TextField(
             controller: _codeController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'SMS OTP',
             ),
           ),
@@ -108,12 +107,12 @@ class LoginPage extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Code Auto Retrieval Timeout'),
-          content:
-              Text('The SMS code retrieval has timed out. Please try again.'),
+          title: const Text('Code Auto Retrieval Timeout'),
+          content: const Text(
+              'The SMS code retrieval has timed out. Please try again.'),
           actions: <Widget>[
             ElevatedButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -134,7 +133,7 @@ class LoginPage extends StatelessWidget {
         return value;
       });
     }
-    print("LP Query Paramas: " + queryParams.toString());
+    print("LP Query Paramas: $queryParams");
     return Scaffold(
       body: queryParams!["inv"] != null
           ? _getInvitationLoginPage()
@@ -154,7 +153,13 @@ class LoginPage extends StatelessWidget {
           ],
         ),
       ),
-      child: _getPhoneLoginWidgets(context),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: _getPhoneLoginWidgets(context),
+        ),
+      ),
     );
   }
 
@@ -249,7 +254,7 @@ class LoginPage extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData) {
-          return Text('No invitation data available.');
+          return const Text('No invitation data available.');
         }
 
         final invitation = snapshot.data!;
@@ -418,20 +423,20 @@ class LoginPage extends StatelessWidget {
             TextEditingController();
 
         return AlertDialog(
-          title: Text('Enter Your First Name and Last Name'),
+          title: const Text('Enter Your First Name and Last Name'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: firstNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'First Name',
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               TextField(
                 controller: lastNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Last Name',
                 ),
               ),
@@ -460,7 +465,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 10),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.red,
+                backgroundColor: Colors.red,
               ),
               onPressed: () async {
                 await FirebaseAuthHelper().logout();

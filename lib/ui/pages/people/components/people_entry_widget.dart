@@ -11,7 +11,7 @@ class PeopleEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Entry data: " + entry.imageAlignment.toString());
+    print("Entry data: ${entry.imageAlignment}");
     _getTextAlignment(entry.imageAlignment);
     return Padding(
       padding: const EdgeInsets.all(8.0),

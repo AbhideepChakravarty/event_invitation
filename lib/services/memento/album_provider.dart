@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'album.dart';
+import 'album_service.dart';
 
 class AlbumProvider with ChangeNotifier {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Album> _albumList = [];
+  final AlbumService _albumService = AlbumService();
+  final List<Album> _albumList = [];
   bool _isFetching = false;
   int _lastFetchedIndex = 0;
   final int _batchSize = 10;
@@ -23,21 +23,25 @@ class AlbumProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   Future<void> fetchNextBatch(List<String> uploadIds) async {
-    if (_isFetching) return;
+    if (_isFetching) {
+      print("This happened!!!!");
+      return;
+    }
 
     _isFetching = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      List<String> nextUploadIds = uploadIds.skip(_lastFetchedIndex).take(_batchSize).toList();
+      List<String> nextUploadIds =
+          uploadIds.skip(_lastFetchedIndex).take(_batchSize).toList();
       if (nextUploadIds.isEmpty) {
         _isFetching = false;
         notifyListeners();
         return;
       }
 
-      List<Album> newAlbums = await _fetchAlbums(nextUploadIds);
+      List<Album> newAlbums = await _albumService.fetchAlbums(nextUploadIds);
       _albumList.addAll(newAlbums);
       _lastFetchedIndex += newAlbums.length;
       _isFetching = false;
@@ -47,40 +51,6 @@ class AlbumProvider with ChangeNotifier {
       _errorMessage = e.toString();
       notifyListeners();
     }
-  }
-
-  Future<List<Album>> _fetchAlbums(List<String> uploadIds) async {
-    List<Album> albums = [];
-    for (String uploadId in uploadIds) {
-      try {
-        var doc = await _firestore.collection('uploadMetadata').doc(uploadId).get();
-        if (doc.exists) {
-          var data = doc.data();
-          var title = data?['title'] ?? 'Untitled Album';
-
-          var contentSnapshot = await _firestore.collection('uploadMetadata/$uploadId/content').limit(1).get();
-          String thumbnailUrl = '';
-          int itemCount = 0;
-
-          if (contentSnapshot.docs.isNotEmpty) {
-            thumbnailUrl = contentSnapshot.docs.first.data()['thumbnailURL'] ?? '';
-            itemCount = data?["uploadedFiles"].length ?? 0;
-          }
-
-          albums.add(Album(
-            title: title,
-            itemCount: itemCount,
-            thumbnailUrl: thumbnailUrl,
-            docdata: data as Map<String, dynamic>,
-            albumContentList: contentSnapshot,
-            albumRef: uploadId,
-          ));
-        }
-      } catch (e) {
-        print('Error fetching album with uploadId $uploadId: $e');
-      }
-    }
-    return albums;
   }
 
   Future<void> refresh(List<String> uploadIds) async {

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:event_invitation/firebase_opti.dart';
@@ -165,8 +164,9 @@ class UploadManager with ChangeNotifier {
   double getOverallProgress() {
     final activeUploads =
         _uploads.where((model) => !model.isCancelled).toList();
-    if (activeUploads.isEmpty)
+    if (activeUploads.isEmpty) {
       return 1.0; // All uploads are either cancelled or completed
+    }
     final totalProgress =
         activeUploads.fold(0.0, (sum, model) => sum + model.uploadProgress);
     return totalProgress / activeUploads.length;

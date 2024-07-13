@@ -14,6 +14,7 @@ class EventAppNavigatorData {
     "/userProfile",
     "/mementoes",
     "/upload",
+    "/albums",
     //---------------
     "/counters/serve",
     "/counters/history",
@@ -44,7 +45,7 @@ class EventAppNavigatorData {
     String url = "";
     String urlPart = "";
     for (String part in pathParts) {
-      print("URL part = " + part);
+      print("URL part = $part");
       if (part == "/") {
         url = part;
         continue;
@@ -62,9 +63,9 @@ class EventAppNavigatorData {
       }
       url = url.substring(0, url.length - 1);
     }
-    print("ND URL part collected = " + urlPart);
-    print("ND URL collected = " + url);
-    print("ND Query Params = " + qp.toString());
+    print("ND URL part collected = $urlPart");
+    print("ND URL collected = $url");
+    print("ND Query Params = $qp");
     String finalPath = allowedPaths.contains(urlPart) ? url : "/404";
     print("Final path = $finalPath");
     return finalPath;
@@ -81,13 +82,13 @@ class EventAppNavigatorData {
   EventAppNavigatorData.userProfile(
       Map<String, dynamic> queryParams, EventAppNavigatorData? targetPath)
       : id = null,
-        this.targetPath = targetPath,
+        targetPath = targetPath,
         qp = queryParams,
         pathParts = ["userProfile"];
   EventAppNavigatorData.loginWithTarget(
       EventAppNavigatorData pTargetPath, Map<String, dynamic> queryParams)
       : id = null,
-        this.targetPath = pTargetPath,
+        targetPath = pTargetPath,
         pathParts = ["login"];
   EventAppNavigatorData.invitationDetails(String invitationCode)
       : id = invitationCode,
@@ -112,6 +113,11 @@ class EventAppNavigatorData {
       : id = pageRef,
         qp = queryParams,
         pathParts = ["upload"];
+  EventAppNavigatorData.albumDetails(
+      String pageRef, Map<String, dynamic> queryParams)
+      : id = pageRef,
+        qp = queryParams,
+        pathParts = ["albums"];
   //-------------------------------------------------------------------------------
   //pathURL = "/login";
   EventAppNavigatorData.menus()
@@ -218,7 +224,7 @@ class EventAppNavigatorData {
       }
       url = "$url/$part";
     }
-    print(url + " is secured page = " + securedPaths.contains(url).toString());
+    print("$url is secured page = ${securedPaths.contains(url)}");
     return securedPaths.contains(url);
   }
 }

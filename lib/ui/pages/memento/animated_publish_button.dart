@@ -20,13 +20,13 @@ class _AnimatedProgressPublishButtonState extends State<AnimatedProgressPublishB
     // Determine if upload is complete
     bool isComplete = widget.progress >= 1.0;
 
-    return Container(
+    return SizedBox(
       width: double.infinity, // Ensure the button takes the full width available
       height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          primary: isComplete ? Colors.green : Colors.grey,
-          onSurface: Colors.grey, // Button color when disabled
+          backgroundColor: isComplete ? Colors.green : Colors.grey,
+          disabledForegroundColor: Colors.grey.withOpacity(0.38), disabledBackgroundColor: Colors.grey.withOpacity(0.12), // Button color when disabled
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           padding: EdgeInsets.zero, // Ensure no padding is affecting the layout
         ),
@@ -43,7 +43,7 @@ class _AnimatedProgressPublishButtonState extends State<AnimatedProgressPublishB
               ),
             Text(
               isComplete ? "Publish" : "Uploading...",
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),

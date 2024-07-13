@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/memento/file_upload_data.dart';
+import '../../../services/memento/file_upload_data.dart';
 
 class UploadMediaTile extends StatelessWidget {
   final FileUploadModel uploadModel;
