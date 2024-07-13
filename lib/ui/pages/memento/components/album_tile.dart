@@ -1,4 +1,3 @@
-import 'package:event_invitation/ui/pages/memento/components/album_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +8,7 @@ import '../../../../services/memento/album.dart';
 class AlbumTile extends StatelessWidget {
   final Album album;
 
-  AlbumTile({Key? key, required this.album}) : super(key: key);
+  const AlbumTile({Key? key, required this.album}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class AlbumTile extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 2,
               blurRadius: 7,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -39,20 +38,20 @@ class AlbumTile extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
                 child: Image.network(album.thumbnailUrl, fit: BoxFit.cover),
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 album.title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
             Text('${album.itemCount} items',
-                style: TextStyle(color: Colors.grey)),
+                style: const TextStyle(color: Colors.grey)),
           ],
         ),
       ),

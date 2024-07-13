@@ -1,4 +1,3 @@
-import 'package:event_invitation/services/memento/album.dart';
 import 'package:event_invitation/ui/pages/memento/components/album_details_page.dart';
 import 'package:event_invitation/ui/pages/invitationDetails/invitation_details.dart';
 import 'package:event_invitation/ui/pages/people/people_page.dart';
