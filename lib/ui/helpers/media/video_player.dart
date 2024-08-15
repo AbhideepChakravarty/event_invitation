@@ -52,9 +52,9 @@ class _ChewieVideoPlayerState extends State<ChewieVideoPlayer> {
   }
 
   Future<void> _initializePlayer() async {
-    print("Going to initialize the video");
+    //print("Going to initialize the video");
     await Future.wait([_videoPlayerController.initialize()]);
-    print("Going to initialize the video done.");
+    //print("Going to initialize the video done.");
 
     setState(() {});
   }

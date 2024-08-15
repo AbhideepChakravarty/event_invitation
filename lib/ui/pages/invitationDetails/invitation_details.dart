@@ -30,7 +30,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
     super.initState();
     /*_scrollController.addListener(() {
       setState(() {
-        print("Scroll offset = " + _scrollController.offset.toString());
+       //print("Scroll offset = " + _scrollController.offset.toString());
         _scrollOffset = _scrollController.offset;
       });
     });*/
@@ -109,8 +109,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
   Widget _buildContent() {
     double primaryTextFontSize =
         MediaQuery.of(context).size.height > 800 ? 60 : 50;
-        print("Colors: ${_invitationData.primaryTextColor} ${_invitationData.primaryTextColor.substring(
-                                1, _invitationData.primaryTextColor.length)}");
+    //print("Colors: ${_invitationData.primaryTextColor} ${_invitationData.primaryTextColor.substring(1, _invitationData.primaryTextColor.length)}");
     return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
@@ -126,10 +125,9 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
                   style: Provider.of<FontProvider>(context)
                       .primaryTextFont
                       .copyWith(
-                        fontSize: primaryTextFontSize,
-                        //Set primary text color using hex code given in invitation data
-                        color: HexColor (_invitationData.primaryTextColor)
-                      )),
+                          fontSize: primaryTextFontSize,
+                          //Set primary text color using hex code given in invitation data
+                          color: HexColor(_invitationData.primaryTextColor))),
             ),
           ),
           // Add more content here
@@ -162,7 +160,7 @@ class _InvitationDetailsPageState extends State<InvitationDetailsPage> {
             tileList.add(const SizedBox(height: 20));
           }
 
-          print("Size of tiles = ${tileList.length}");
+          //print("Size of tiles = ${tileList.length}");
           return Column(children: tileList);
         }
       },

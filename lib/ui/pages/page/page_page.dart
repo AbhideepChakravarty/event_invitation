@@ -15,7 +15,7 @@ class PagePage extends StatelessWidget {
   PagePage({Key? key, required this.pageRef}) : super(key: key);
 
   Future<PageData> _fetchPageData(String languageCode) async {
-    print("Fetching data in language code: $languageCode");
+    //print("Fetching data in language code: $languageCode");
     // Replace this with your actual data fetching logic
     return _pageService.fetchPageData(pageRef, languageCode);
   }
@@ -29,7 +29,7 @@ class PagePage extends StatelessWidget {
     return FutureBuilder<PageData>(
       future: _fetchPageData(languageCode),
       builder: (context, snapshot) {
-        print("Snapshot: $snapshot");
+        //print("Snapshot: $snapshot");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
@@ -67,8 +67,8 @@ class PagePage extends StatelessWidget {
         widgets.add(
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child:
-                    Text(content.text.replaceAll('\\n', '\n'), style: fontProvider.descriptionTextFont)),
+              child: Text(content.text.replaceAll('\\n', '\n'),
+                  style: fontProvider.descriptionTextFont)),
         );
       } else if (content is ImageContent) {
         widgets.add(

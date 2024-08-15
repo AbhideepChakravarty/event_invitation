@@ -111,7 +111,7 @@ class HomePage extends StatelessWidget {
                     if (invitationData.active) {
                       return GestureDetector(
                         onTap: () {
-                          print("Tap on ${invitationData.primaryText}");
+                          //print("Tap on ${invitationData.primaryText}");
                           var onTap = Provider.of<EventAppRouterDelegate>(
                                   context,
                                   listen: false)

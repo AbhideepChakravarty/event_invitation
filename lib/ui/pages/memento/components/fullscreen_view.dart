@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../services/memento/media_provider.dart';
+// Import dart:html for web functionality
+
+import 'media_downloader.dart';
 
 class FullScreenMediaPage extends StatefulWidget {
   final int initialPage;
@@ -18,11 +22,13 @@ class FullScreenMediaPage extends StatefulWidget {
 class _FullScreenMediaPageState extends State<FullScreenMediaPage> {
   late PageController _pageController;
   late MediaProvider _mediaProvider;
+  int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialPage);
+    _currentIndex = widget.initialPage;
     RawKeyboard.instance.addListener(_handleKeyEvent);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mediaProvider = Provider.of<MediaProvider>(context, listen: false);
@@ -45,6 +51,9 @@ class _FullScreenMediaPageState extends State<FullScreenMediaPage> {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
+      setState(() {
+        _currentIndex = _pageController.page!.toInt() - 1;
+      });
     }
   }
 
@@ -54,12 +63,18 @@ class _FullScreenMediaPageState extends State<FullScreenMediaPage> {
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
       );
+      setState(() {
+        _currentIndex = _pageController.page!.toInt() + 1;
+      });
     } else if (_mediaProvider.paginationHandler.hasMoreIds()) {
       _mediaProvider.fetchNextPage().then((_) {
         _pageController.nextPage(
           duration: const Duration(milliseconds: 200),
           curve: Curves.easeInOut,
         );
+        setState(() {
+          _currentIndex = _pageController.page!.toInt() + 1;
+        });
       });
     }
   }
@@ -75,6 +90,17 @@ class _FullScreenMediaPageState extends State<FullScreenMediaPage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () {
+              String imageUrl =
+                  _mediaProvider.contentList[_currentIndex].originalMediaURL;
+              //print("Image URL : $imageUrl");
+              FileDownloader.downloadImage(imageUrl, context);
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.black,
       body: Consumer<MediaProvider>(
@@ -86,26 +112,21 @@ class _FullScreenMediaPageState extends State<FullScreenMediaPage> {
                 itemCount: mediaProvider.contentList.length,
                 itemBuilder: (context, index) {
                   return InteractiveViewer(
-                    child: Image.network(
-                      mediaProvider.contentList[index].compressedMediaURL,
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          mediaProvider.contentList[index].compressedMediaURL,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(
-                        child: Icon(Icons.error, color: Colors.red),
-                      ),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => const Center(
+                          child: Icon(Icons.error, color: Colors.red)),
                     ),
                   );
+                },
+                onPageChanged: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
                 },
               ),
               // Left navigation arrow

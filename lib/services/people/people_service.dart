@@ -11,7 +11,7 @@ class PeopleService {
         .languageCode;
 
     try {
-      print("Fetching people data for $peopleRef");
+      //print("Fetching people data for $peopleRef");
       final peopleDoc = await FirebaseFirestore.instance
           .collection('people')
           .doc(peopleRef)
@@ -27,11 +27,11 @@ class PeopleService {
 
       final title = textBlockDoc['title'];
       final description = textBlockDoc['desc'];
-      print("Worked on people data for $peopleRef upto entries");
+      //print("Worked on people data for $peopleRef upto entries");
       final entries = <PeopleEntry>[];
       final entriesSnapshot =
           await peopleDoc.reference.collection('entries').orderBy('seq').get();
-      print("objects fetched: ${entriesSnapshot.docs.length}");
+      //print("objects fetched: ${entriesSnapshot.docs.length}");
       for (var entryDoc in entriesSnapshot.docs) {
         final entryImage = entryDoc['image'];
         final int entryImageAlign = entryDoc['imageAlign'];
@@ -49,9 +49,10 @@ class PeopleService {
         final ImageAlignment entryImageAlignment =
             ImageAlignment.values[entryImageAlign];
         var visibility = true;
-        if (entryDoc.data().containsKey("visibility") && entryDoc['visibility'] != null) {
+        if (entryDoc.data().containsKey("visibility") &&
+            entryDoc['visibility'] != null) {
           visibility = entryDoc['visibility'];
-          print("For entry $entryName, visibility is $visibility");
+          //print("For entry $entryName, visibility is $visibility");
         }
 
         entries.add(PeopleEntry(
@@ -70,7 +71,7 @@ class PeopleService {
         entries: entries,
       );
     } catch (e) {
-      print('Error fetching people data: $e');
+      //print('Error fetching people data: $e');
       throw Exception('Failed to fetch people data');
     }
   }

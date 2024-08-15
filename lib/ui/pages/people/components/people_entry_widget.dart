@@ -11,7 +11,7 @@ class PeopleEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("Entry data: ${entry.imageAlignment}");
+    //print("Entry data: ${entry.imageAlignment}");
     _getTextAlignment(entry.imageAlignment);
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -52,11 +52,11 @@ class PeopleEntryWidget extends StatelessWidget {
                             : entry.imageAlignment == ImageAlignment.left
                                 ? Alignment.centerLeft
                                 : Alignment.centerRight,
-                        child: Text(entry.name, textAlign: _getTextAlignment(entry.imageAlignment),
+                        child: Text(entry.name,
+                            textAlign: _getTextAlignment(entry.imageAlignment),
                             style: Provider.of<FontProvider>(context)
                                 .descriptionTextFont
                                 .copyWith(
-                                    
                                     fontSize: 24,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)),
@@ -131,12 +131,12 @@ class PeopleEntryWidget extends StatelessWidget {
       ),
     );
   }
-  
+
   TextAlign _getTextAlignment(ImageAlignment imageAlignment) {
-      return entry.imageAlignment == ImageAlignment.center
-                            ? TextAlign.center
-                            : entry.imageAlignment == ImageAlignment.left
-                                ? TextAlign.left
-                                : TextAlign.right;
+    return entry.imageAlignment == ImageAlignment.center
+        ? TextAlign.center
+        : entry.imageAlignment == ImageAlignment.left
+            ? TextAlign.left
+            : TextAlign.right;
   }
 }

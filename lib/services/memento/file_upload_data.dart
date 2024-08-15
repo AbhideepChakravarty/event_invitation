@@ -1,4 +1,3 @@
-
 import 'package:collection/collection.dart';
 import 'package:event_invitation/firebase_opti.dart';
 import 'package:flutter/material.dart';
@@ -33,9 +32,9 @@ class UploadManager with ChangeNotifier {
 
   // Rest of the class implementation...
 
-   List<FileUploadModel> _uploads = [];
-   Map<String, UploadTask> _ongoingUploads = {};
-   Map<String, String> _uploadPaths = {};
+  List<FileUploadModel> _uploads = [];
+  Map<String, UploadTask> _ongoingUploads = {};
+  Map<String, String> _uploadPaths = {};
   String? _uploadId;
   String? _currentUploadId;
 
@@ -44,7 +43,6 @@ class UploadManager with ChangeNotifier {
     _ongoingUploads = {};
     _uploadId = null;
     _uploadPaths = {};
-   
   }
 
   List<FileUploadModel> get uploads => _uploads;
@@ -102,7 +100,7 @@ class UploadManager with ChangeNotifier {
         // If cancelled, delete the uploaded file
         await _deleteFileFromStorage(filePath);
       } else {
-        print("Upload complete for ${file.name} without cancellation.");
+        //print("Upload complete for ${file.name} without cancellation.");
         // Otherwise, set the upload path on successful upload
         uploadModel.uploadPath = await fileRef.getDownloadURL();
       }
@@ -113,19 +111,18 @@ class UploadManager with ChangeNotifier {
   }
 
   void cancelUpload(String fileId) {
-    print("_uploads: $_uploads");
+    //print("_uploads: $_uploads");
     // Find the upload model by fileId
     final uploadModel =
         _uploads.firstWhereOrNull((model) => model.file.name == fileId);
-    print("Found upload model: $uploadModel for fileId: $fileId");
+    //print("Found upload model: $uploadModel for fileId: $fileId");
     if (uploadModel != null) {
       uploadModel.isCancelled = true; // Mark the upload as cancelled
 
       // Cancel the Firebase upload task if it's ongoing
       final uploadTask = _ongoingUploads[fileId];
       if (uploadTask != null) {
-        print(
-            "Found in ongoing uploads. Canceling upload for ${uploadModel.file.name}");
+        //print("Found in ongoing uploads. Canceling upload for ${uploadModel.file.name}");
 
         uploadTask.cancel();
         _ongoingUploads
@@ -142,13 +139,13 @@ class UploadManager with ChangeNotifier {
   }
 
   Future<void> _deleteFileFromStorage(String filePath) async {
-    print("Trying to delete file from storage: $filePath");
+    //print("Trying to delete file from storage: $filePath");
     if (filePath.isNotEmpty) {
       try {
         await FirebaseStorage.instance.ref(filePath).delete();
-        print("Deleted $filePath from Firebase Storage.");
+        //print("Deleted $filePath from Firebase Storage.");
       } catch (e) {
-        print("Error deleting $filePath from Firebase Storage: $e");
+        //print("Error deleting $filePath from Firebase Storage: $e");
       }
     }
   }
@@ -175,7 +172,7 @@ class UploadManager with ChangeNotifier {
   void _startHugeFileUpload(
       PlatformFile file, String mementoRef, String filePath) {
     // Implement the upload task for huge files
-    print("Starting huge file upload for: ${file.name}");
+    //print("Starting huge file upload for: ${file.name}");
     // Implement the upload task for huge files using firebase storage
   }
 
@@ -183,7 +180,7 @@ class UploadManager with ChangeNotifier {
   List<String> get uploadPaths => _uploadPaths.values.toList();
   String? get uploadId => _uploadId;
 
-  set setCurrentUploadId (String? id) {
+  set setCurrentUploadId(String? id) {
     _currentUploadId = id;
   }
 

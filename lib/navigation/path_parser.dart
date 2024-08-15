@@ -7,19 +7,19 @@ class EventAppRouteParser
   @override
   Future<EventAppNavigatorData> parseRouteInformation(
       RouteInformation routeInformation) async {
-    print("parseRouteInformation is called.");
+    //print("parseRouteInformation is called.");
     final uri = Uri.parse(routeInformation.location.toString());
     final queryParams = uri.queryParameters;
-    print("Received URI - $uri - ${uri.pathSegments.length}");
-    print("Qp in parser = $queryParams");
+    //print("Received URI - $uri - ${uri.pathSegments.length}");
+    //print("Qp in parser = $queryParams");
     EventAppNavigatorData navData;
     //handle '/'
     if (uri.pathSegments.isEmpty) {
       if (uri.toString() != "/") {
-        print("Paring for home page but instantiating login page");
+        //print("Paring for home page but instantiating login page");
         navData = EventAppNavigatorData.login({});
       } else {
-        print("Paring for home page");
+        //print("Paring for home page");
         navData = EventAppNavigatorData.home({});
       }
     }
@@ -73,9 +73,9 @@ class EventAppRouteParser
       } else if (first == "mementoes") {
         navData = EventAppNavigatorData.memento(second);
       } else if (first == "upload") {
-        navData = EventAppNavigatorData.upload(second,queryParams);
+        navData = EventAppNavigatorData.upload(second, queryParams);
       } else if (first == "albums") {
-        navData = EventAppNavigatorData.albumDetails(second,queryParams);
+        navData = EventAppNavigatorData.albumDetails(second, queryParams);
       } else {
         navData = EventAppNavigatorData.unknown();
       }
@@ -105,16 +105,16 @@ class EventAppRouteParser
     } else {
       navData = EventAppNavigatorData.unknown();
     }
-    print("Nav = $navData");
+    //print("Nav = $navData");
     return navData;
   }
 
   @override
   RouteInformation restoreRouteInformation(
       EventAppNavigatorData configuration) {
-    print("In restoreRouteInformation navDats is  = $configuration");
+    //print("In restoreRouteInformation navDats is  = $configuration");
     String location2 = configuration.getPathURL();
-    print("In restoreRouteInformation path = $location2");
+    //print("In restoreRouteInformation path = $location2");
     RouteInformation routeInfo = RouteInformation(location: location2);
     return routeInfo;
   }

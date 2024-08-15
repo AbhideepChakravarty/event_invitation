@@ -7,7 +7,7 @@ class UserInvitationService {
       FirebaseFirestore.instance.collection('userInvitations');
 
   Future<List<UserInvitationData>> fetchDataForGuest(String phoneNumber) async {
-    print("Received phone number as $phoneNumber");
+    //print("Received phone number as $phoneNumber");
     final querySnapshot = await userInvitationCollection
         .where('phoneNumber', isEqualTo: phoneNumber)
         .get();

@@ -10,7 +10,7 @@ class QnAService {
     final lang = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
-    print("Fetching QnA data in language code: $lang");
+    //print("Fetching QnA data in language code: $lang");
 
     try {
       final qnasCollection = FirebaseFirestore.instance.collection('qnas');
@@ -18,17 +18,17 @@ class QnAService {
 
       final textBlock = qnaDoc['textBlock'] as String;
       final textBlockRef = '$textBlock-$lang';
-      print("Text Block Ref: $textBlockRef");
+      //print("Text Block Ref: $textBlockRef");
       final textBlockDoc = await FirebaseFirestore.instance
           .collection('textBlocks')
           .doc(textBlockRef)
           .get();
-      print("Text Block with id exists: ${textBlockDoc.exists}");
+      //print("Text Block with id exists: ${textBlockDoc.exists}");
       final title = textBlockDoc['title'] as String;
-      print("Found title as $title");
+      //print("Found title as $title");
       final qnas = textBlockDoc.reference.collection('qnas').orderBy('seq');
       final qnaList = await qnas.get();
-      print("QnA count is ${qnaList.size}");
+      //print("QnA count is ${qnaList.size}");
       List<QnAItem> items = [];
       for (final qnaDoc in qnaList.docs) {
         final question = qnaDoc['q'] as String;
@@ -38,7 +38,7 @@ class QnAService {
 
       return QnAData(qnaRef: pageRef, title: title, items: items);
     } catch (e) {
-      print('Error fetching QnA data: $e');
+      //print('Error fetching QnA data: $e');
       throw Exception('Failed to fetch QnA data');
     }
   }

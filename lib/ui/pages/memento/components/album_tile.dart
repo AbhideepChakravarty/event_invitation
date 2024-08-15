@@ -14,7 +14,7 @@ class AlbumTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Album code ${album.albumRef}");
+        //print("Album code ${album.albumRef}");
 
         var onTap = Provider.of<EventAppRouterDelegate>(context, listen: false)
             .routeTrigger;
@@ -38,7 +38,8 @@ class AlbumTile extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(15)),
                 child: Image.network(album.thumbnailUrl, fit: BoxFit.cover),
               ),
             ),
@@ -46,7 +47,8 @@ class AlbumTile extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: Text(
                 album.title,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

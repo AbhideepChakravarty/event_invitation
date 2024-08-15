@@ -48,13 +48,13 @@ class _MementoViewState extends State<MementoView> {
         .snapshots()
         .listen((snapshot) {
       if (snapshot.exists && snapshot.data()!['status'] == 10) {
-        print("Publish completed.");
+        //print("Publish completed.");
         Provider.of<UploadManager>(context, listen: false).setCurrentUploadId =
             null;
         _showRefreshSnackbar();
       }
     }, onError: (error) {
-      print("Error listening to upload: $error");
+      //print("Error listening to upload: $error");
     });
   }
 

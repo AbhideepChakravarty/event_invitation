@@ -56,6 +56,8 @@ dependencies:
   firebase_storage: ^11.6.0
   firebase_ui_firestore: 1.5.14
   cached_network_image: ^3.2.3
+  dio: ^5.5.0+1
+  amplify_storage_s3: ^1.7.0
   
 dev_dependencies:
   flutter_test:

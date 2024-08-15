@@ -24,7 +24,7 @@ class AlbumProvider with ChangeNotifier {
 
   Future<void> fetchNextBatch(List<String> uploadIds) async {
     if (_isFetching) {
-      print("This happened!!!!");
+      //print("This happened!!!!");
       return;
     }
 

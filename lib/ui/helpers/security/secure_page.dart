@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 import '../../../auth/firebase_auth.dart';
 import '../../../navigation/nav_data.dart';
 //import 'package:sito/ui/helper/processing_loader.dart';
@@ -23,8 +22,8 @@ class SecurePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget con = Container();
     final firebaseUser = FirebaseAuthHelper().getUser;
-    print("Is user anonymous? ${firebaseUser!.isAnonymous}");
-    if (firebaseUser.isAnonymous) {
+    //print("Is user anonymous? ${firebaseUser!.isAnonymous}");
+    if (firebaseUser!.isAnonymous) {
       Future.delayed(Duration.zero, () async {
         if (targetPath != null) {
           onTap(EventAppNavigatorData.loginWithTarget(targetPath, qpMap));

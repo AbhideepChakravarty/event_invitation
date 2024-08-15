@@ -30,15 +30,14 @@ class UserProfileService extends RestService {
 
       if (response.statusCode == 201) {
         // Successfully created the user profile
-        print('User profile created successfully.');
+        //print('User profile created successfully.');
       } else {
         // Handle errors, e.g., failed to create the user profile
-        print(
-            'Failed to create user profile. Status code: ${response.statusCode}');
+        //print('Failed to create user profile. Status code: ${response.statusCode}');
       }
     } catch (e) {
       // Handle any exceptions that occur during the process
-      print('Error creating user profile: $e');
+      //print('Error creating user profile: $e');
     }
   }
 
@@ -60,7 +59,7 @@ class UserProfileService extends RestService {
       }
     } catch (e) {
       // Handle any exceptions that occur during the process
-      print('Error getting user profile: $e');
+      //print('Error getting user profile: $e');
       rethrow; // Re-throw the exception to propagate it to the caller
     }
   }

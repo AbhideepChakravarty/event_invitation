@@ -44,15 +44,18 @@ class PeoplePage extends StatelessWidget {
               children: [
                 Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: peopleData.description == "" ? Container() : Text(peopleData.description,
-                        style: Provider.of<FontProvider>(context)
-                            .descriptionTextFont
-                            .copyWith(fontSize: 16, color: Colors.black))),
-                ...peopleData.entries
-                    .map((entry) { 
-                      print("Entry: ${entry.name} is ${entry.isVisible}");
-                      return entry.isVisible ? PeopleEntryWidget(entry: entry) : Container();
-                      }),
+                    child: peopleData.description == ""
+                        ? Container()
+                        : Text(peopleData.description,
+                            style: Provider.of<FontProvider>(context)
+                                .descriptionTextFont
+                                .copyWith(fontSize: 16, color: Colors.black))),
+                ...peopleData.entries.map((entry) {
+                  //print("Entry: ${entry.name} is ${entry.isVisible}");
+                  return entry.isVisible
+                      ? PeopleEntryWidget(entry: entry)
+                      : Container();
+                }),
               ],
             ),
           ),

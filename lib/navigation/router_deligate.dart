@@ -57,13 +57,13 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
 
   MaterialPage _buildMaterialPage(EventAppNavigatorData data) {
     MaterialPage? page;
-    print("RD load page by nav data: $data");
+    //print("RD load page by nav data: $data");
     //Check is data is secured Page
     if (data.isSecuredPage()) {
       //Check if user is logged in and anonymous user
       if (FirebaseAuth.instance.currentUser == null ||
           FirebaseAuth.instance.currentUser!.isAnonymous) {
-        print("User is not logged in.");
+        //print("User is not logged in.");
         //if data pathParts conatains invitations and id is not null
         if (data.pathParts.contains("invitations") && data.id != null) {
           print("User not logged in and invitation details page.");
@@ -78,7 +78,7 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
               ));
           navData = EventAppNavigatorData(pathParts: ["login"], qp: qp);
         } else {
-          print("User not logged in and login page.");
+          //print("User not logged in and login page.");
           //If user is not logged in then redirect to login page
           page = MaterialPage(
               key: const ValueKey("Login"),
@@ -97,8 +97,8 @@ class EventAppRouterDelegate extends RouterDelegate<EventAppNavigatorData>
       page = _buildPage(data);
     }
 
-    print("Page: ${page!.key}");
-    return page;
+    //print("Page: ${page!.key}");
+    return page as MaterialPage;
   }
 
   final List<MaterialPage> _pages = <MaterialPage>[];

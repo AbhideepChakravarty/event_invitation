@@ -64,7 +64,7 @@ class LoginPage extends StatelessWidget {
       String verificationId, int? resendToken, BuildContext context) {
     _verificationId = verificationId;
     // Show dialog to enter the SMS code
-    print("Code received.");
+    //print("Code received.");
     showDialog(
       context: context,
       builder: (context) {
@@ -133,7 +133,7 @@ class LoginPage extends StatelessWidget {
         return value;
       });
     }
-    print("LP Query Paramas: $queryParams");
+    //print("LP Query Paramas: $queryParams");
     return Scaffold(
       body: queryParams!["inv"] != null
           ? _getInvitationLoginPage()
@@ -216,7 +216,7 @@ class LoginPage extends StatelessWidget {
             onPressed: () async {
               // Implement login functionality here
               String phoneNumber = dropdownValue + _phoneController.text.trim();
-              print(phoneNumber); // for testing
+              //print(phoneNumber); // for testing
               if (kIsWeb) {
                 await _authHelper
                     .signInWithPhoneNumber(phoneNumber)
@@ -482,18 +482,18 @@ class LoginPage extends StatelessWidget {
   }
 
   void _gotoNextPage(BuildContext context) {
-    print("Go to home page");
+    //print("Go to home page");
     // Navigate to the home page
     final delegator =
         Provider.of<EventAppRouterDelegate>(context, listen: false);
-    print("Delegator: $delegator");
+    //print("Delegator: $delegator");
     ValueChanged<EventAppNavigatorData> onTap = delegator.routeTrigger;
     if (targetPath != null) {
       onTap(targetPath!);
       return;
     } else {
       var invitationCode = queryParams!["inv"];
-      print("Invitation code: $invitationCode");
+      //print("Invitation code: $invitationCode");
       invitationCode == null
           ? onTap(EventAppNavigatorData.home({}))
           : onTap(EventAppNavigatorData.invitationDetails(invitationCode));

@@ -52,17 +52,17 @@ class RestService {
       }
     } catch (e) {
       // Handle any errors that occur during fetching.
-      print('Error fetching baseURL: $e');
+      //print('Error fetching baseURL: $e');
       baseURL = null;
     }
   }
 
   Future<http.Response> post(String path, Map<String, dynamic> body) async {
     var encode = json.encode(body);
-    print("URL -  $baseURL$path");
-    print("Request Body : $encode");
+    //print("URL -  $baseURL$path");
+    //print("Request Body : $encode");
     String token = await getJwtTokenSync();
-    print("Received token in post is : $token");
+    //print("Received token in post is : $token");
     final response = await http.post(
       Uri.parse('$baseURL$path'),
       headers: {
@@ -71,13 +71,13 @@ class RestService {
       },
       body: encode,
     );
-    print("Response Body : ${response.body}");
+    //print("Response Body : ${response.body}");
     return response;
   }
 
   Future<http.Response> get(String path) async {
     String token = await getJwtTokenSync();
-    print("Received token in get is : $token");
+    //print("Received token in get is : $token");
     final response = await http.get(
       Uri.parse('$baseURL$path'),
       headers: {
@@ -85,7 +85,7 @@ class RestService {
         'Authorization': 'Bearer $token', // Add JWT bearer token
       },
     );
-    print("Response Body : ${response.body}");
+    //print("Response Body : ${response.body}");
     return response;
   }
 
@@ -94,7 +94,7 @@ class RestService {
   Future<String> getJwtTokenSync() async {
     String token = "";
     await FirebaseAuthHelper().getUser!.getIdToken().then((value) {
-      print("Value of the token is : $value");
+      //print("Value of the token is : $value");
       token = value.toString();
     });
     return token;

@@ -79,11 +79,11 @@ class FirebaseAuthHelper with ChangeNotifier {
         onVerificationCompleted();
       },
       verificationFailed: (FirebaseAuthException e) {
-        print("Verification failed");
+        //print("Verification failed");
         onVerificationFailed(e);
       },
       codeSent: (String verificationId, int? resendToken) {
-        print("Code is sent");
+        //print("Code is sent");
         onCodeSent(verificationId, resendToken);
       },
       codeAutoRetrievalTimeout: (String verificationId) {

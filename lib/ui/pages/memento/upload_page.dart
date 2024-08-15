@@ -54,7 +54,7 @@ class _UploadPageState extends State<UploadPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("This is album page ? ${widget.albumFlag}");
+    //print("This is album page ? ${widget.albumFlag}");
     return Scaffold(
       appBar: AppBar(
         title: const Text("Upload Media"),
@@ -136,7 +136,7 @@ class _UploadPageState extends State<UploadPage> {
   }
 
   void _publishButtonPressed() async {
-    print("Publishing..........................");
+    //print("Publishing..........................");
 
     // If albumFlag is true, check if the title is not empty
     if (widget.albumFlag && _titleController.text.isEmpty) {

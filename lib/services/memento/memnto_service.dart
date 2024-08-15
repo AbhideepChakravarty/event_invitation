@@ -4,9 +4,9 @@ import 'media_content.dart';
 import 'memento_content.dart';
 
 class MementoService {
-
   static final firestore = FirebaseFirestore.instance;
-  static Future<MementoContent> fetchMementoContent(String mementoId, int type) async {
+  static Future<MementoContent> fetchMementoContent(
+      String mementoId, int type) async {
     final contentRef = firestore
         .collection('mementoes')
         .doc(mementoId)
@@ -18,7 +18,9 @@ class MementoService {
     final uploadIds = querySnapshot.docs
         .map((doc) => doc.get('uploadId') as String)
         .whereType<String>()
-        .toList().reversed.toList();
+        .toList()
+        .reversed
+        .toList();
 
     return MementoContent(uploadIds: uploadIds);
   }
@@ -28,7 +30,8 @@ class MementoService {
     List<MediaContent> contentList = [];
     for (String uploadId in uploadIds) {
       // Add the fetched contents to the list
-      List<MediaContent> uploadContents = await fetchContentFromUploadId(uploadId);
+      List<MediaContent> uploadContents =
+          await fetchContentFromUploadId(uploadId);
       contentList.addAll(uploadContents);
     }
     return contentList;
@@ -42,15 +45,18 @@ class MementoService {
         .collection('content');
 
     final querySnapshot = await contentRef.get();
-    return querySnapshot.docs.map((doc) => MediaContent.fromFirestore(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => MediaContent.fromFirestore(doc))
+        .toList();
   }
 
-  Future<List<MediaContent>> fetchContentFromUploadIds(List<String> uploadIds) async {
+  Future<List<MediaContent>> fetchContentFromUploadIds(
+      List<String> uploadIds) async {
     List<MediaContent> content = [];
-    for (var element in uploadIds)  {
+    for (var element in uploadIds) {
       content.addAll(await fetchContentFromUploadId(element));
-     }
-    
+    }
+
     return content;
   }
 }
@@ -64,7 +70,7 @@ class PaginationHandler {
   PaginationHandler({required this.allUploadIds, this.batchSize = 10});
 
   bool hasMoreIds() {
-    print("More uploadIds? " + (lastFetchedIndex + 1 < allUploadIds.length).toString());
+   //print("More uploadIds? " + (lastFetchedIndex + 1 < allUploadIds.length).toString());
     return lastFetchedIndex + 1 < allUploadIds.length;
   }
 
@@ -100,7 +106,9 @@ class PaginationHandler {
   List<String> getNextUploadIds() {
     if (!hasMoreIds()) return [];
     int start = lastFetchedIndex + 1;
-    int end = start + batchSize <= allUploadIds.length ? start + batchSize : allUploadIds.length;
+    int end = start + batchSize <= allUploadIds.length
+        ? start + batchSize
+        : allUploadIds.length;
     lastFetchedIndex = end - 1;
     return allUploadIds.sublist(start, end);
   }

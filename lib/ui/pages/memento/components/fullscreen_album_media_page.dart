@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../../../services/memento/album_media_provider.dart'; // Your existing provider
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../../services/memento/album_media_provider.dart';
+import 'media_downloader.dart'; // Your existing provider
 
 class FullScreenAlbumMediaPage extends StatefulWidget {
   final int initialPage;
@@ -21,6 +23,7 @@ class FullScreenAlbumMediaPage extends StatefulWidget {
 class _FullScreenAlbumMediaPageState extends State<FullScreenAlbumMediaPage> {
   late PageController _pageController;
   late AlbumMediaProvider _albumMediaProvider;
+  late String _downloadURL;
 
   @override
   void initState() {
@@ -80,6 +83,15 @@ class _FullScreenAlbumMediaPageState extends State<FullScreenAlbumMediaPage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () {
+              //print("Album Image URL : $_downloadURL");
+              FileDownloader.downloadImage(_downloadURL, context);
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.black,
       body: Consumer<AlbumMediaProvider>(
@@ -94,26 +106,17 @@ class _FullScreenAlbumMediaPageState extends State<FullScreenAlbumMediaPage> {
                       !albumMediaProvider.isFetching) {
                     _albumMediaProvider.fetchMedia(widget.albumRef);
                   }
-
+                  _downloadURL =
+                      albumMediaProvider.mediaList[index].originalMediaURL;
                   return InteractiveViewer(
-                    child: Image.network(
-                      albumMediaProvider.mediaList[index].compressedMediaURL,
+                    child: CachedNetworkImage(
+                      imageUrl: albumMediaProvider
+                          .mediaList[index].compressedMediaURL,
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(
-                        child: Icon(Icons.error, color: Colors.red),
-                      ),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => const Center(
+                          child: Icon(Icons.error, color: Colors.red)),
                     ),
                   );
                 },

@@ -23,7 +23,7 @@ import 'ui/helpers/theme/font_provider.dart';
 Future<void> main() async {
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
+    //print('${record.level.name}: ${record.time}: ${record.message}');
   });
 
   WidgetsFlutterBinding.ensureInitialized();
@@ -82,19 +82,19 @@ class MyApp extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData && !snapshot.data!.isAnonymous) {
-              print("Non-anonymous user found: ${snapshot.data!.email}");
+              //print("Non-anonymous user found: ${snapshot.data!.email}");
               return _getBody(context);
             } else {
-              print("No user found.");
+              //print("No user found.");
               return FutureBuilder<User?>(
                 future: FirebaseAuthHelper().signInAnonymously,
                 builder: (context, anonSnapshot) {
                   if (anonSnapshot.connectionState == ConnectionState.done) {
                     if (anonSnapshot.hasData) {
-                      print("Anonymous user logged in.");
+                      //print("Anonymous user logged in.");
                       return _getBody(context);
                     } else {
-                      print("Logging in...");
+                      //print("Logging in...");
                       return const Center(child: CircularProgressIndicator());
                     }
                   } else {
@@ -114,7 +114,7 @@ class MyApp extends StatelessWidget {
   MaterialApp _getBody(BuildContext context) {
     final themeChanger = Provider.of<ThemeChanger>(context);
     final delegator = Provider.of<EventAppRouterDelegate>(context);
-    print("App loading = ${delegator.navData}");
+    //print("App loading = ${delegator.navData}");
     return MaterialApp.router(
       title: 'Occurr',
       theme: themeChanger.getTheme,

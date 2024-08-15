@@ -16,8 +16,9 @@ import 'package:flutter/foundation.dart'
 /// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
-    var environment = "dev";//String.fromEnvironment('env', defaultValue: 'dev');
-    print("Environment = $environment");
+    var environment = const String.fromEnvironment('env', defaultValue: 'dev');
+    //"dev"; //
+    //print("Environment = $environment");
 
     if (kIsWeb) {
       if (environment == 'prod') {

@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  amplify_db_common
   audioplayers_windows
   cloud_firestore
   firebase_auth

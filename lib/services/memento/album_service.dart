@@ -17,17 +17,22 @@ class AlbumService {
     // Always fetch from the database and update the cache
     for (String uploadId in uploadIds) {
       try {
-        var doc = await _firestore.collection('uploadMetadata').doc(uploadId).get();
+        var doc =
+            await _firestore.collection('uploadMetadata').doc(uploadId).get();
         if (doc.exists) {
           var data = doc.data();
           var title = data?['title'] ?? 'Untitled Album';
 
-          var contentSnapshot = await _firestore.collection('uploadMetadata/$uploadId/content').limit(1).get();
+          var contentSnapshot = await _firestore
+              .collection('uploadMetadata/$uploadId/content')
+              .limit(1)
+              .get();
           String thumbnailUrl = '';
           int itemCount = 0;
 
           if (contentSnapshot.docs.isNotEmpty) {
-            thumbnailUrl = contentSnapshot.docs.first.data()['thumbnailURL'] ?? '';
+            thumbnailUrl =
+                contentSnapshot.docs.first.data()['thumbnailURL'] ?? '';
             itemCount = data?["uploadedFiles"].length ?? 0;
           }
 
@@ -45,7 +50,7 @@ class AlbumService {
           albums.add(album);
         }
       } catch (e) {
-        print('Error fetching album with uploadId $uploadId: $e');
+        //print('Error fetching album with uploadId $uploadId: $e');
       }
     }
 

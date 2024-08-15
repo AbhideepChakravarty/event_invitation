@@ -23,7 +23,7 @@ class InvitationService {
   final Map<String, int> _fetchCounts = {};
 
   Future<InvitationData> fetchData(String invitationCode) async {
-    print("Fetching invitation with code as $invitationCode");
+    //print("Fetching invitation with code as $invitationCode");
     return _fetchAndCacheData(invitationCode);
     /*if (_fetchCounts.containsKey(invitationCode)) {
       int counter = _fetchCounts[invitationCode] ?? 0;
@@ -44,10 +44,10 @@ class InvitationService {
     final invitationDoc = await invitationsCollection.doc(invitationCode).get();
 
     if (!invitationDoc.exists) {
-      print("Invitation not found");
+      //print("Invitation not found");
       throw Exception("Invitation not found");
     }
-    print("Found invitation");
+    //print("Found invitation");
     InvitationData invitationData = InvitationData(
       primaryText: invitationDoc['primaryText'],
       secondaryText: invitationDoc['secondaryText'],
@@ -58,17 +58,17 @@ class InvitationService {
     );
     invitationData.videoUrl = invitationDoc['videoUrl'];
     invitationData.thumbnailURL = invitationDoc['thumbnailURL'];
-    
+
     if (invitationDoc['primaryTextColor'] != null) {
       invitationData.primaryTextColor = invitationDoc['primaryTextColor'];
     }
     _retrievedInvitations[invitationCode] = invitationData;
     _fetchCounts[invitationCode] = 1; // Reset the counter to 0
-    print("Invitation data fetched successfully");
+    //print("Invitation data fetched successfully");
     return invitationData;
   }
 
-  Future<List<InvitationTileData>> getInvitationTileData(
+  /*Future<List<InvitationTileData>> getInvitationTileData(
       String invitationId, String lang) async {
     final tilesQuerySnapshot = await invitationsCollection
         .doc(invitationId)
@@ -84,13 +84,47 @@ class InvitationService {
       final textBlock = tileSnapshot['textBlock'];
       final InvitationTileData? tileData =
           await _getTileText(textBlock, tileSnapshot, lang);
-      if (tileSnapshot.data().containsKey("visibility") && tileSnapshot['visibility'] != null) {
+      if (tileSnapshot.data().containsKey("visibility") &&
+          tileSnapshot['visibility'] != null) {
         bool visibility = tileSnapshot['visibility'];
         tileData!.visibility = visibility;
-        print("For invitation $tileData.title, visibility is $visibility");
+        //print("For invitation $tileData.title, visibility is $visibility");
       }
       if (tileData != null && tileData.visibility) {
         tiles.add(tileData);
+      }
+    }
+    return tiles;
+  }*/
+
+  Future<List<InvitationTileData>> getInvitationTileData(
+      String invitationId, String lang) async {
+    final tilesQuerySnapshot = await invitationsCollection
+        .doc(invitationId)
+        .collection('tiles')
+        .orderBy("seq")
+        .get();
+
+    List<InvitationTileData> tiles = [];
+
+    for (var tileSnapshot in tilesQuerySnapshot.docs) {
+      // Check if the tileSnapshot contains the "visibility" key
+      bool visibility = true; // Default to true
+
+      if (tileSnapshot.data().containsKey("visibility") &&
+          tileSnapshot['visibility'] != null) {
+        visibility = tileSnapshot['visibility'];
+      }
+
+      if (visibility) {
+        final textBlock = tileSnapshot['textBlock'];
+        final InvitationTileData? tileData =
+            await _getTileText(textBlock, tileSnapshot, lang);
+
+        if (tileData != null) {
+          tileData.visibility = visibility;
+          tiles.add(tileData);
+        }
       }
     }
     return tiles;
@@ -100,7 +134,7 @@ class InvitationService {
       String textBlock, QueryDocumentSnapshot tileSnapshot, String lang) async {
     InvitationTileData? tileData;
     try {
-      print("Working with $textBlock-$lang");
+      //print("Working with $textBlock-$lang");
       await textBlockCollection
           .doc("$textBlock-$lang")
           .get()
@@ -111,7 +145,7 @@ class InvitationService {
           Map<String, dynamic> textBlockData =
               textBlockDoc.data() as Map<String, dynamic>;
           //print the textBlockData map here
-          print(textBlockData);
+          //print(textBlockData);
 
           String? footer = textBlockData.containsKey('footer')
               ? textBlockDoc['footer'] // Use "footer" if present
@@ -132,12 +166,11 @@ class InvitationService {
             ref: ref ?? "",
           );
         } else {
-          print("TextBlock document not found.");
+          //print("TextBlock document not found.");
         }
       });
     } catch (e) {
-      print(
-          "Error fetching textBlock document: $textBlock-$lang ${e.toString()}");
+      //print("Error fetching textBlock document: $textBlock-$lang ${e.toString()}");
     }
 
     return tileData;

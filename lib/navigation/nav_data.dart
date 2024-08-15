@@ -33,6 +33,8 @@ class EventAppNavigatorData {
   List<String> securedPaths = [
     "/",
     //"/invitations",
+    //"/albums",
+    "/mementoes"
   ];
 
   EventAppNavigatorData(
@@ -45,7 +47,7 @@ class EventAppNavigatorData {
     String url = "";
     String urlPart = "";
     for (String part in pathParts) {
-      print("URL part = $part");
+      //print("URL part = $part");
       if (part == "/") {
         url = part;
         continue;
@@ -63,11 +65,11 @@ class EventAppNavigatorData {
       }
       url = url.substring(0, url.length - 1);
     }
-    print("ND URL part collected = $urlPart");
-    print("ND URL collected = $url");
-    print("ND Query Params = $qp");
+    //print("ND URL part collected = $urlPart");
+    //print("ND URL collected = $url");
+    //print("ND Query Params = $qp");
     String finalPath = allowedPaths.contains(urlPart) ? url : "/404";
-    print("Final path = $finalPath");
+    //print("Final path = $finalPath");
     return finalPath;
   }
 
@@ -224,7 +226,7 @@ class EventAppNavigatorData {
       }
       url = "$url/$part";
     }
-    print("$url is secured page = ${securedPaths.contains(url)}");
+    //print("$url is secured page = ${securedPaths.contains(url)}");
     return securedPaths.contains(url);
   }
 }
