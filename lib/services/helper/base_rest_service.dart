@@ -60,7 +60,7 @@ class RestService {
   Future<http.Response> post(String path, Map<String, dynamic> body) async {
     var encode = json.encode(body);
     //print("URL -  $baseURL$path");
-    //print("Request Body : $encode");
+    print("Request Body : $encode");
     String token = await getJwtTokenSync();
     //print("Received token in post is : $token");
     final response = await http.post(

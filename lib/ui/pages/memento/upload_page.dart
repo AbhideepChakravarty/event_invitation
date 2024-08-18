@@ -1,3 +1,4 @@
+import 'package:event_invitation/auth/firebase_auth.dart';
 import 'package:event_invitation/navigation/nav_data.dart';
 import 'package:event_invitation/navigation/router_deligate.dart';
 import 'package:event_invitation/services/memento/uplaod_metadata_service.dart';
@@ -27,8 +28,9 @@ class _UploadPageState extends State<UploadPage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _tagsController = TextEditingController();
+  bool _isPreparingUpload = false;
 
-  void _pickMedia() async {
+  /*void _pickMedia() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
       type: FileType.custom,
@@ -50,6 +52,41 @@ class _UploadPageState extends State<UploadPage> {
         }
       }
     }
+  }*/
+
+  void _pickMedia() async {
+    setState(() {
+      _isPreparingUpload = true;
+    });
+
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png'],
+      );
+
+      if (result != null) {
+        String uploadId = await _getUploadId(widget.mementoRef);
+        final uploadManager =
+            Provider.of<UploadManager>(context, listen: false);
+        for (var file in result.files) {
+          try {
+            uploadManager.startUpload(file, widget.mementoRef, uploadId);
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to upload file: ${file.name}'),
+              ),
+            );
+          }
+        }
+      }
+    } finally {
+      setState(() {
+        _isPreparingUpload = false;
+      });
+    }
   }
 
   @override
@@ -60,78 +97,91 @@ class _UploadPageState extends State<UploadPage> {
         title: const Text("Upload Media"),
         automaticallyImplyLeading: false,
       ),
-      body: Consumer<UploadManager>(
-        builder: (context, uploadManager, child) {
-          final uploads = uploadManager.uploads;
-          final overallProgress = uploadManager.getOverallProgress();
-          final isAllUploadedOrCancelled = uploads.every(
-              (upload) => upload.uploadProgress >= 1.0 || upload.isCancelled);
+      body: _isPreparingUpload
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text("Preparing upload data..."),
+                ],
+              ),
+            )
+          : Consumer<UploadManager>(
+              builder: (context, uploadManager, child) {
+                final uploads = uploadManager.uploads;
+                final overallProgress = uploadManager.getOverallProgress();
+                final isAllUploadedOrCancelled = uploads.every((upload) =>
+                    upload.uploadProgress >= 1.0 || upload.isCancelled);
 
-          var showGrid = uploads.isNotEmpty;
-          return Column(
-            children: [
-              widget.albumFlag ? _createAlbumComponent(context) : Container(),
-              if (showGrid)
-                Expanded(
-                  child: _buildThumbnailGrid(uploads),
-                ),
-              if (!showGrid)
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    margin: const EdgeInsets.all(20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 60),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                          style: BorderStyle.solid),
-                      borderRadius: BorderRadius.circular(12),
-                      // To create a dashed border effect, you might need a custom painter or use an existing package like `flutter_dash`.
-                    ),
-                    child: Column(
-                      mainAxisAlignment: widget.albumFlag
-                          ? MainAxisAlignment.spaceAround
-                          : MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.cloud_upload,
-                          size: 64,
-                          color: Colors.blueAccent,
+                var showGrid = uploads.isNotEmpty;
+                return Column(
+                  children: [
+                    widget.albumFlag
+                        ? _createAlbumComponent(context)
+                        : Container(),
+                    if (showGrid)
+                      Expanded(
+                        child: _buildThumbnailGrid(uploads),
+                      ),
+                    if (!showGrid)
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 60),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Colors.grey,
+                                width: 2,
+                                style: BorderStyle.solid),
+                            borderRadius: BorderRadius.circular(12),
+                            // To create a dashed border effect, you might need a custom painter or use an existing package like `flutter_dash`.
+                          ),
+                          child: Column(
+                            mainAxisAlignment: widget.albumFlag
+                                ? MainAxisAlignment.spaceAround
+                                : MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.cloud_upload,
+                                size: 64,
+                                color: Colors.blueAccent,
+                              ),
+                              const Text(
+                                'DRAG FILES HERE',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              const Text(
+                                'Drag & drop files here\nor browse your device',
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20),
+                              ElevatedButton(
+                                onPressed: _pickMedia,
+                                child: const Text("BROWSE FILES"),
+                              ),
+                            ],
+                          ),
                         ),
-                        const Text(
-                          'DRAG FILES HERE',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    if (showGrid)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AnimatedProgressPublishButton(
+                          progress: overallProgress,
+                          onPressed: isAllUploadedOrCancelled
+                              ? () => _publishButtonPressed()
+                              : null,
                         ),
-                        const Text(
-                          'Drag & drop files here\nor browse your device',
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _pickMedia,
-                          child: const Text("BROWSE FILES"),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              if (showGrid)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AnimatedProgressPublishButton(
-                    progress: overallProgress,
-                    onPressed: isAllUploadedOrCancelled
-                        ? () => _publishButtonPressed()
-                        : null,
-                  ),
-                ),
-            ],
-          );
-        },
-      ),
+                      ),
+                  ],
+                );
+              },
+            ),
     );
   }
 
@@ -181,6 +231,7 @@ class _UploadPageState extends State<UploadPage> {
           firebaseStoragePaths: filePaths, mementoId: widget.mementoRef);
     }
     uploadMetadata.uploadId = uploadManager.uploadId;
+    uploadMetadata.uploader = FirebaseAuthHelper().getUser!.uid;
     // Invoke the UploadMetadataService method createUploadMetaData
 
     uploadMetadataService.createUploadMetadata(uploadMetadata);
